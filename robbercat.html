@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ROBBERCAT's Journey</title>
+  <meta name="description" content="A structured guide for software testers: testing fundamentals, Python and TypeScript, Playwright, API testing, frameworks, anti-flakiness, CI/CD with GitHub Actions and Jenkins, system design, performance testing and root-cause analysis.">
+  <meta name="theme-color" content="#2e6a6e">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232e6a6e'/%3E%3Ctext x='16' y='21' font-size='13' font-family='Arial' font-weight='700' text-anchor='middle' fill='white'%3Erc%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+/* ==========================================================================
+   ROBBERCAT's Journey: documentation-style stylesheet
+   Calm palette: warm paper (light) and slate (dark), one muted teal accent.
+   ========================================================================== */
+
+:root {
+  --bg: #f7f6f2;
+  --surface: #ffffff;
+  --sidebar: #efeee9;
+  --text: #1d2127;
+  --muted: #5d6670;
+  --border: #e2dfd7;
+  --accent: #2e6a6e;
+  --accent-text: #245659;
+  --accent-soft: #e4eeee;
+  --code-bg: #f1f0eb;
+  --code-text: #1f2a2e;
+  --ok: #2f7a57;
+  --warn: #8a5a14;
+  --warn-soft: #f6eee0;
+  --bad: #a3423b;
+  --shadow: 0 1px 2px rgba(20, 24, 30, 0.04), 0 6px 20px rgba(20, 24, 30, 0.04);
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --header-h: 60px;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #14171b;
+  --surface: #1a1e23;
+  --sidebar: #171b20;
+  --text: #e3e6ea;
+  --muted: #9aa3ad;
+  --border: #2a3038;
+  --accent: #7fb3b0;
+  --accent-text: #9cc9c6;
+  --accent-soft: #1d2b2b;
+  --code-bg: #11151a;
+  --code-text: #d6dde2;
+  --ok: #6cc39a;
+  --warn: #e0ae5a;
+  --warn-soft: #2a2417;
+  --bad: #e1857d;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { font-family: var(--serif); color: var(--text); line-height: 1.25; margin: 0 0 0.6em; font-weight: 600; }
+h1 { font-size: 2.25rem; letter-spacing: -0.01em; }
+h2 { font-size: 1.5rem; margin-top: 2.2em; padding-top: 0.2em; }
+h3 { font-size: 1.15rem; margin-top: 1.6em; font-family: var(--sans); font-weight: 600; }
+p { margin: 0 0 1.05em; }
+a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { color: var(--text); }
+button { font: inherit; color: inherit; }
+img, svg { display: block; max-width: 100%; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+.muted { color: var(--muted); }
+.small { font-size: 0.88rem; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- Header ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); min-width: 0; }
+.brand:hover { color: var(--text); }
+.mark {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: -0.02em;
+}
+.brand-name { font-family: var(--serif); font-size: 1.12rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand-name span { color: var(--muted); font-weight: 400; }
+.topbar .spacer { flex: 1; }
+.tb-btn {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tb-btn:hover { color: var(--text); border-color: var(--muted); }
+.tb-btn kbd {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0 4px;
+  margin-left: 6px;
+}
+.menu-btn { display: none; }
+
+/* ---------- Layout ---------- */
+.shell { display: grid; grid-template-columns: 290px minmax(0, 1fr); min-height: calc(100vh - var(--header-h)); }
+.sidebar {
+  position: sticky;
+  top: var(--header-h);
+  align-self: start;
+  height: calc(100vh - var(--header-h));
+  overflow-y: auto;
+  padding: 22px 16px 40px;
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+}
+.nav-section { margin-bottom: 18px; }
+.nav-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 8px 8px;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+.nav-link:hover { background: var(--surface); color: var(--text); }
+.nav-link.active { background: var(--surface); color: var(--accent-text); font-weight: 600; box-shadow: var(--shadow); }
+.nav-link .tick {
+  width: 16px; height: 16px; flex: 0 0 16px; border-radius: 50%;
+  border: 1px solid var(--border); display: grid; place-items: center;
+  font-size: 10px; color: transparent;
+}
+.nav-link.done .tick { background: var(--ok); border-color: var(--ok); color: #fff; }
+.nav-link .n { color: var(--muted); font-family: var(--mono); font-size: 0.75rem; width: 22px; flex: 0 0 22px; }
+.chapter-label { font-size: 0.82rem; color: var(--muted); margin: 14px 8px 4px; font-weight: 600; }
+
+.main { min-width: 0; padding: 48px 56px 96px; }
+.page { max-width: 760px; margin: 0 auto; }
+.page.wide { max-width: 900px; }
+.page-enter { animation: fadeIn 0.25s ease both; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- Page elements ---------- */
+.crumb { font-size: 0.85rem; color: var(--muted); margin-bottom: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+.crumb .sep { opacity: 0.5; }
+.lead { font-size: 1.14rem; color: var(--muted); line-height: 1.65; margin-bottom: 1.6em; }
+.meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.88rem; color: var(--muted); margin-bottom: 28px; }
+.meta span + span::before { content: "·"; margin-right: 16px; opacity: 0.6; }
+
+.figure {
+  margin: 28px 0 34px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.figure figcaption { font-size: 0.85rem; color: var(--muted); margin-top: 14px; text-align: center; }
+
+.callout {
+  margin: 26px 0;
+  padding: 16px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
+}
+.callout strong { display: block; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-text); margin-bottom: 4px; }
+.callout p:last-child { margin-bottom: 0; }
+.callout.warn { border-left-color: var(--warn); }
+.callout.warn strong { color: var(--warn); }
+
+.example {
+  margin: 30px 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--surface);
+}
+.example-head {
+  padding: 12px 20px;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.example-body { padding: 20px; }
+.example-body > :last-child { margin-bottom: 0; }
+
+.codeblock { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 18px 0; background: var(--code-bg); }
+.codeblock-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 14px; border-bottom: 1px solid var(--border);
+  font-size: 0.78rem; color: var(--muted); font-family: var(--mono);
+}
+.copy-btn {
+  background: transparent; border: 1px solid var(--border); border-radius: 6px;
+  padding: 2px 9px; font-size: 0.75rem; cursor: pointer; color: var(--muted);
+}
+.copy-btn:hover { color: var(--text); border-color: var(--muted); }
+pre { margin: 0; padding: 16px 18px; overflow-x: auto; }
+pre code { font-family: var(--mono); font-size: 0.86rem; line-height: 1.6; color: var(--code-text); white-space: pre; }
+code { font-family: var(--mono); font-size: 0.88em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; color: var(--code-text); }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.93rem; margin: 18px 0; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { font-weight: 600; color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+tr:last-child td { border-bottom: 0; }
+.table-wrap { overflow-x: auto; }
+
+.keypoints { margin: 30px 0; }
+.keypoints ul { margin: 0; padding-left: 20px; }
+.keypoints li { margin-bottom: 6px; }
+
+.task {
+  margin: 30px 0;
+  padding: 18px 22px;
+  border-radius: 10px;
+  background: var(--warn-soft);
+  border: 1px solid var(--border);
+}
+.task h3 { margin: 0 0 6px; color: var(--warn); font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.task p:last-child { margin: 0; }
+
+.quiz {
+  margin: 34px 0 30px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.quiz h3 { margin: 0 0 8px; color: var(--accent-text); font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.quiz-q { font-family: var(--serif); font-size: 1.12rem; font-weight: 600; margin: 0 0 14px; }
+.quiz-opts { display: grid; gap: 8px; }
+.opt {
+  text-align: left; padding: 11px 14px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--bg); cursor: pointer; font-size: 0.95rem;
+}
+.opt:hover { border-color: var(--accent); }
+.opt.right { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, var(--surface)); }
+.opt.wrong { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 10%, var(--surface)); }
+.quiz-fb { margin: 14px 0 0; min-height: 1.4em; color: var(--muted); font-size: 0.93rem; }
+
+.complete-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 10px 0 34px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  font-size: 0.93rem; font-weight: 600; cursor: pointer; text-decoration: none;
+}
+.btn:hover { border-color: var(--muted); color: var(--text); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:hover { color: #fff; filter: brightness(1.06); }
+.btn.done { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 50%, var(--border)); }
+
+.pager {
+  display: flex; justify-content: space-between; gap: 16px; padding-top: 22px;
+  border-top: 1px solid var(--border); font-size: 0.95rem;
+}
+.pager a { text-decoration: none; max-width: 48%; color: var(--accent-text); }
+.pager a:hover { text-decoration: underline; }
+
+/* ---------- Home ---------- */
+.overview-table td:first-child { font-weight: 600; white-space: nowrap; }
+.progress-box {
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  padding: 18px 22px; border: 1px solid var(--border); border-radius: 12px;
+  background: var(--surface); margin: 26px 0;
+}
+.progress-track { flex: 1; min-width: 200px; height: 8px; border-radius: 999px; background: var(--code-bg); overflow: hidden; }
+.progress-track i { display: block; height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.5s ease; }
+
+/* ---------- Labs ---------- */
+.seg { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; background: var(--sidebar); border: 1px solid var(--border); border-radius: 10px; margin: 22px 0; width: fit-content; max-width: 100%; }
+.seg a {
+  padding: 7px 14px; border-radius: 7px; font-size: 0.9rem; color: var(--muted); text-decoration: none;
+}
+.seg a.on { background: var(--surface); color: var(--text); box-shadow: var(--shadow); font-weight: 600; }
+.lab-panel { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); padding: 26px; }
+.lab-panel h2 { margin-top: 0; font-size: 1.3rem; }
+.controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 18px 0; }
+.controls label { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 0.92rem; }
+.controls .grow { flex: 1; min-width: 200px; }
+.controls input[type="range"] { width: 100%; accent-color: var(--accent); }
+.controls input[type="text"], .controls select, .search {
+  background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px;
+  padding: 9px 12px; font: inherit; font-size: 0.92rem;
+}
+.search { width: 100%; margin: 20px 0 8px; }
+.stage-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 18px 0; }
+.stage { padding: 12px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); text-align: center; transition: border-color 0.3s, background 0.3s; }
+.stage b { display: block; font-size: 0.85rem; font-weight: 600; }
+.stage small { display: block; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
+.stage.running { border-color: var(--accent); }
+.stage.pass { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 10%, var(--bg)); }
+.stage.fail { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 10%, var(--bg)); }
+.stage.skipped { opacity: 0.5; }
+@media (max-width: 720px) { .stage-row { grid-template-columns: repeat(3, 1fr); } }
+.log { list-style: none; padding: 0; margin: 14px 0 0; font-family: var(--mono); font-size: 0.84rem; max-height: 200px; overflow: auto; }
+.log li { padding: 5px 10px; border-left: 2px solid var(--border); margin-bottom: 3px; color: var(--muted); }
+.log li.ok { color: var(--ok); border-color: var(--ok); }
+.log li.bad { color: var(--bad); border-color: var(--bad); }
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; }
+.cmp { padding: 18px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); }
+.cmp h3 { margin: 0 0 4px; font-size: 0.98rem; }
+.cmp .big { font-family: var(--serif); font-size: 1.9rem; font-weight: 600; margin: 4px 0; }
+.cmp p { margin: 0; font-size: 0.88rem; color: var(--muted); }
+@media (max-width: 720px) { .compare { grid-template-columns: 1fr; } }
+.hist { height: 200px; display: flex; align-items: flex-end; gap: 4px; padding-top: 12px; border-bottom: 1px solid var(--border); }
+.hbar { flex: 1; background: var(--accent); opacity: 0.75; border-radius: 3px 3px 0 0; min-height: 2px; transition: height 0.4s ease; }
+.stats-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 16px; }
+.metric { padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); text-align: center; }
+.metric b { display: block; font-size: 1.15rem; font-family: var(--serif); }
+.metric span { font-size: 0.78rem; color: var(--muted); }
+.metric.ok b { color: var(--ok); }
+.metric.bad b { color: var(--bad); }
+@media (max-width: 720px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+.risk-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+.rmatrix { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.rcell { aspect-ratio: 1.3; border-radius: 8px; display: grid; place-items: center; font-weight: 600; font-size: 1.05rem; }
+.rcell.low { background: color-mix(in srgb, var(--ok) 16%, var(--bg)); color: var(--ok); }
+.rcell.med { background: color-mix(in srgb, var(--warn) 18%, var(--bg)); color: var(--warn); }
+.rcell.high { background: color-mix(in srgb, var(--bad) 18%, var(--bg)); color: var(--bad); }
+.rlist { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; max-height: 300px; overflow: auto; }
+.rlist li { padding: 10px 12px; border-radius: 8px; background: var(--bg); border-left: 3px solid var(--border); font-size: 0.9rem; }
+.rlist li span { display: block; color: var(--muted); font-size: 0.82rem; }
+.rlist li.high { border-left-color: var(--bad); }
+.rlist li.med { border-left-color: var(--warn); }
+.rlist li.low { border-left-color: var(--ok); }
+@media (max-width: 720px) { .risk-wrap { grid-template-columns: 1fr; } }
+
+/* ---------- Glossary ---------- */
+.gloss { margin: 0; }
+.gl-item { padding: 14px 0; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 220px 1fr; gap: 18px; }
+.gl-item dt { font-weight: 600; }
+.gl-item dd { margin: 0; color: var(--muted); }
+@media (max-width: 640px) { .gl-item { grid-template-columns: 1fr; gap: 4px; } }
+
+/* ---------- Visuals (calm, professional) ---------- */
+.vis { width: 100%; height: auto; max-width: 680px; margin: 0 auto; }
+.vis text { font-family: var(--sans); }
+.vis .box { fill: var(--surface); stroke: var(--border); stroke-width: 1.5; }
+.vis .box.accent { stroke: var(--accent); }
+.vis .label { fill: var(--text); font-size: 13px; font-weight: 600; text-anchor: middle; }
+.vis .sub { fill: var(--muted); font-size: 11px; text-anchor: middle; }
+.vis .line { stroke: var(--border); stroke-width: 1.8; fill: none; }
+.vis .flow { stroke: var(--accent); stroke-width: 1.8; fill: none; stroke-dasharray: 5 5; }
+.vis .dot { fill: var(--accent); }
+.vis .dot2 { fill: var(--muted); }
+.vis .hl { fill: var(--accent-soft); stroke: var(--accent); }
+.vis .step { animation: stepOn 8s infinite; animation-delay: calc(var(--i) * 1s); }
+@keyframes stepOn { 0%, 100% { opacity: 0.45; } 6%, 16% { opacity: 1; } 24% { opacity: 0.45; } }
+.vis .draw { stroke-dasharray: 900; stroke-dashoffset: 900; animation: draw 6s ease-in-out infinite; }
+.vis .draw.b { animation-delay: 1.2s; }
+@keyframes draw { 0%, 10% { stroke-dashoffset: 900; } 45%, 100% { stroke-dashoffset: 0; } }
+.vis .pulse { animation: pulseOp 3s ease-in-out infinite; }
+@keyframes pulseOp { 50% { opacity: 0.35; } }
+
+.bars { display: grid; gap: 14px; }
+.bar-row { display: grid; grid-template-columns: 170px 1fr; gap: 14px; align-items: center; font-size: 0.9rem; }
+.track { height: 14px; background: var(--code-bg); border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
+.fill { height: 100%; width: 0; border-radius: 999px; }
+.fill.sleep { background: var(--bad); animation: grow-sleep 6s ease-in-out infinite; }
+.fill.cond { background: var(--ok); animation: grow-cond 6s ease-in-out infinite; }
+@keyframes grow-sleep { 0% { width: 0; } 70%, 100% { width: 100%; } }
+@keyframes grow-cond { 0% { width: 0; } 25%, 100% { width: 34%; } }
+@media (max-width: 560px) { .bar-row { grid-template-columns: 1fr; gap: 6px; } }
+
+.pipe { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; }
+.pipe .st { padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); font-size: 0.86rem; font-weight: 600; animation: stageOn 7s infinite; animation-delay: calc(var(--i) * 0.7s); }
+.pipe .arr { color: var(--muted); }
+@keyframes stageOn { 0%, 60%, 100% { border-color: var(--border); } 8%, 45% { border-color: var(--ok); color: var(--ok); } }
+
+.layers-stack { display: grid; gap: 6px; max-width: 420px; margin: 0 auto; }
+.layers-stack .lay { padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); font-size: 0.92rem; font-weight: 600; text-align: center; animation: stepOn 9s infinite; animation-delay: calc(var(--i) * 0.9s); }
+.layers-stack .down { text-align: center; color: var(--muted); font-size: 0.8rem; }
+
+.rca-stack { display: grid; gap: 8px; max-width: 520px; margin: 0 auto; }
+.rca-stack .why { padding: 11px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); font-size: 0.9rem; animation: rcaIn 8s infinite; animation-delay: calc(var(--i) * 0.8s); opacity: 0; }
+.rca-stack .why.root { border-color: var(--bad); }
+@keyframes rcaIn { 0% { opacity: 0; } 10%, 80% { opacity: 1; } 92%, 100% { opacity: 0; } }
+
+.cache-note { font-size: 0.85rem; color: var(--muted); text-align: center; margin-top: 8px; }
+
+/* ---------- Mobile ---------- */
+.scrim { display: none; }
+@media (max-width: 960px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidebar {
+    position: fixed; top: var(--header-h); left: 0; bottom: 0; width: 290px; max-width: 86vw; height: auto;
+    transform: translateX(-100%); transition: transform 0.25s ease; z-index: 30; box-shadow: var(--shadow);
+  }
+  .sidebar.open { transform: none; }
+  .scrim.open { display: block; position: fixed; inset: var(--header-h) 0 0 0; background: rgba(0,0,0,0.25); z-index: 25; }
+  .menu-btn { display: inline-flex; }
+  .main { padding: 32px 22px 80px; }
+  h1 { font-size: 1.85rem; }
+  .tb-btn .label-long { display: none; }
+}
+@media (max-width: 520px) {
+  .brand-name span { display: none; }
+  .tb-btn kbd { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ---------- Search dialog ---------- */
+.palette { position: fixed; inset: 0; z-index: 60; background: rgba(15, 18, 22, 0.42); display: flex; justify-content: center; align-items: flex-start; padding-top: 12vh; }
+.palette.hidden { display: none; }
+.palette-box { width: min(560px, 92vw); background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.25); overflow: hidden; }
+#paletteInput { width: 100%; border: 0; border-bottom: 1px solid var(--border); background: transparent; color: var(--text); font: inherit; font-size: 1rem; padding: 16px 18px; outline: none; }
+#paletteList { list-style: none; margin: 0; padding: 6px; max-height: 360px; overflow: auto; }
+#paletteList li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 12px; border-radius: 7px; cursor: pointer; font-size: 0.93rem; }
+#paletteList li small { color: var(--muted); }
+#paletteList li.act { background: var(--accent-soft); color: var(--accent-text); }
+
+/* ---------- Database scan diagram ---------- */
+.scan { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; max-width: 460px; margin: 0 auto; font-family: var(--mono); font-size: 0.86rem; background: var(--bg); }
+.scan-row { display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 9px 14px; border-bottom: 1px solid var(--border); }
+.scan-row:last-child { border-bottom: 0; }
+.scan-row.head { color: var(--muted); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; background: var(--surface); }
+
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <button class="tb-btn menu-btn" id="menuBtn" type="button" aria-label="Open chapter menu">Menu</button>
+    <a class="brand" href="#/" aria-label="ROBBERCAT's Journey home">
+      <span class="mark" aria-hidden="true">rc</span>
+      <span class="brand-name">ROBBERCAT's <span>Journey</span></span>
+    </a>
+    <div class="spacer"></div>
+    <button class="tb-btn" id="searchBtn" type="button">Search <kbd>Ctrl K</kbd></button>
+    <button class="tb-btn" id="themeBtn" type="button" aria-label="Switch light and dark theme">Theme</button>
+  </header>
+
+  <div class="shell">
+    <aside class="sidebar" id="sidebar" aria-label="Lessons"></aside>
+    <div class="scrim" id="scrim"></div>
+    <main class="main" id="main"></main>
+  </div>
+
+  <div class="palette hidden" id="palette" role="dialog" aria-modal="true" aria-label="Search lessons">
+    <div class="palette-box">
+      <input id="paletteInput" type="text" placeholder="Search lessons and pages" autocomplete="off" aria-label="Search lessons and pages">
+      <ul id="paletteList" role="listbox"></ul>
+    </div>
+  </div>
+
+<script>
+/* ==========================================================================
+   ROBBERCAT's Journey: course content
+   Each lesson has: sections (explanation), an example (worked, with explanation),
+   key points, a practice task and a quick check.
+   ========================================================================== */
+window.COURSE = {
+
+  chapters: [
+    { id: 'foundations', title: 'Foundations', blurb: 'How software is built, tested and recorded.' },
+    { id: 'programming', title: 'Programming', blurb: 'Python and TypeScript, from first lines to a working test.' },
+    { id: 'automation', title: 'Automation and APIs', blurb: 'Driving browsers and APIs reliably.' },
+    { id: 'framework', title: 'Framework design', blurb: 'Structuring automation so it survives growth.' },
+    { id: 'reliability', title: 'Reliability and CI/CD', blurb: 'Stable tests and pipelines that give honest feedback.' },
+    { id: 'system', title: 'System design', blurb: 'How systems are shaped, and what that means for testers.' },
+    { id: 'quality', title: 'Quality operations', blurb: 'Data, performance, root-cause analysis and risk.' }
+  ],
+
+  topics: [
+
+    /* ============================ FOUNDATIONS ============================ */
+    {
+      id: 'testing-fundamentals', chapter: 'foundations', title: 'Testing fundamentals', time: '25 min', visual: 'lifecycle',
+      summary: 'The thinking that comes before any tool: why we test, how software is delivered, how to design good test cases and how to report defects clearly.',
+      sections: [
+        { h: 'Why testing exists', p: [
+          'Software fails in ways users remember, and those failures are expensive: lost customers, refunds, emergency fixes and damaged trust. Testing reduces that risk by checking that the system behaves as the requirements describe, and by giving the team fast information whenever something changes.',
+          'The output of a tester is information, not a verdict. A good tester answers three questions for the team: what works, what does not, and how confident we can be. Every test should exist because it answers a question somebody actually cares about.'
+        ]},
+        { h: 'SDLC and STLC', p: [
+          'The Software Development Life Cycle (SDLC) is the path a product takes from idea to release: requirements, design, development, testing, deployment and maintenance. Different models arrange these differently. Waterfall completes each phase before starting the next. Agile repeats the cycle in short iterations and tests continuously. The V-Model pairs each development phase with a matching test phase, such as acceptance tests for requirements.',
+          'The Software Testing Life Cycle (STLC) is the testing track inside that process. It usually covers requirement analysis, test planning, test case design, environment setup, test execution and test closure. Each phase has entry and exit criteria, which tell you when you may begin it and when it is finished.'
+        ]},
+        { h: 'Test design techniques', p: [
+          'Exhaustive testing is impossible for almost every real input, so testers use techniques to choose a small, effective set of cases. Equivalence partitioning groups inputs that should behave the same and tests one value from each group. Boundary value analysis tests the edges of those groups, because off-by-one defects cluster there. Decision tables cover combinations of conditions, and state transition testing covers workflows, such as an order moving from placed to paid to shipped.'
+        ]},
+        { h: 'Reporting defects', p: [
+          'A defect report is useful only if someone else can reproduce the problem. It needs a clear title, the environment and build, numbered steps, the expected result, the actual result, and evidence such as a screenshot or log excerpt. Severity describes the technical impact on the system. Priority describes how soon the business wants it fixed. A misspelled word on the home page may be low severity but high priority, so keep the two fields separate when you triage.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: test cases for a password field',
+        text: 'The requirement says a password must be between 8 and 64 characters. Applying boundary value analysis gives the cases below. Each row targets one boundary, so a single failing row points directly at the defect.',
+        table: {
+          head: ['Case', 'Input length', 'Expected result', 'Why it matters'],
+          rows: [
+            ['TC-01', '7 characters', 'Rejected with a clear message', 'Just below the minimum'],
+            ['TC-02', '8 characters', 'Accepted', 'Exactly the minimum'],
+            ['TC-03', '64 characters', 'Accepted', 'Exactly the maximum'],
+            ['TC-04', '65 characters', 'Rejected', 'Just above the maximum'],
+            ['TC-05', '0 characters', 'Rejected, required-field message', 'Empty input']
+          ]
+        },
+        after: 'Five cases cover the whole range. Without boundary analysis a tester might only try a typical 12-character password, which passes even when the boundary check is missing entirely.'
+      },
+      keypoints: [
+        'Every test case should trace back to a requirement or an identified risk.',
+        'Boundary values are a high-yield source of defects.',
+        'Severity describes impact; priority describes urgency. Record both.',
+        'A short, reproducible defect report is worth more than a long vague one.'
+      ],
+      task: 'Choose a form you use often. Write five test cases for one field using equivalence partitioning and boundary values, with expected results.',
+      quiz: {
+        q: 'A password field accepts 8 to 64 characters. Which input is a boundary test?',
+        o: ['A 30-character password', 'A 7-character password', 'A password containing symbols', 'An empty field named pass'],
+        a: 1,
+        e: '7 characters sits just below the minimum. Boundary tests also include 8, 64 and 65 characters.'
+      }
+    },
+
+    {
+      id: 'git', chapter: 'foundations', title: 'Git and collaboration', time: '20 min', visual: 'branch',
+      summary: 'Your automation code lives in a repository. Git records every change, lets teammates review it, and lets pipelines run it on each push.',
+      sections: [
+        { h: 'Commits, branches and pull requests', p: [
+          'A commit is a saved snapshot of your files together with a message that explains why the change exists. Messages are for people, so write them in the imperative mood and keep them specific, such as "Add retry to login helper" rather than "fixes".',
+          'A branch is a parallel line of work. You create a branch for each change, so work in progress never disturbs main. When the change is ready, you push the branch and open a pull request. A pull request is the review step: teammates read the diff, leave comments, and approve before the change is merged.'
+        ]},
+        { h: 'Merge and rebase', p: [
+          'Merge joins two histories and records the point where they came together. Rebase replays your commits on top of the latest main, which produces a straight, readable history. A practical rule is to rebase your own unshared branch to stay current with main, and never rewrite history that other people have already pulled.'
+        ]},
+        { h: 'Conflicts and secrets', p: [
+          'A conflict happens when two branches change the same lines. Git marks the conflicting section in the file. Decide the correct content, remove the markers, and commit. If you are unsure which version is right, ask the author of the other change.',
+          'Never commit credentials, even briefly. Git keeps history, so a password committed and then deleted is still recoverable. Store secrets in environment variables or a secrets manager, and list local files such as .env in .gitignore.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: a feature branch from start to merge',
+        text: 'The sequence below adds one test on its own branch, reviews it through a pull request and returns main to the latest state.',
+        code: { lang: 'bash', code: '# 1. Start from an up-to-date main and create a branch\ngit checkout main\ngit pull\ngit checkout -b feature/login-smoke-test\n\n# 2. Make a focused change and commit it\ngit add tests/login.spec.ts\ngit commit -m "Add smoke test for valid login"\n\n# 3. Share the branch and open a pull request on GitHub\ngit push -u origin feature/login-smoke-test\n\n# 4. After approval, merge on GitHub, then clean up locally\ngit checkout main\ngit pull\ngit branch -d feature/login-smoke-test' },
+        after: 'Each step has a purpose. Pulling main first means your branch starts from the latest code, which reduces conflicts. The commit message describes the behavior added. Deleting the branch after merge keeps the repository tidy, and the history on main still records the change.'
+      },
+      keypoints: [
+        'Commit small, focused changes with messages that explain why.',
+        'One branch per change, reviewed through a pull request.',
+        'Rebase your own unshared work; do not rewrite shared history.',
+        'Never commit credentials, even temporarily.'
+      ],
+      task: 'Create a practice repository. Make three commits on a branch called feature/first-test, open a pull request, and merge it after review.',
+      quiz: {
+        q: 'What is the main purpose of a pull request?',
+        o: ['To delete old branches', 'To have changes reviewed before they are merged', 'To run the database', 'To create a new repository'],
+        a: 1,
+        e: 'A pull request is the review checkpoint. It lets teammates catch problems before the change reaches main.'
+      }
+    },
+
+    /* ============================ PROGRAMMING ============================ */
+    {
+      id: 'python', chapter: 'programming', title: 'Python for test automation', time: '40 min', visual: null,
+      summary: 'Python reads close to plain English, which makes it a gentle first language. The core ideas here are enough to write, run and understand real tests.',
+      sections: [
+        { h: 'Why Python', p: [
+          'Python is widely used in test automation. pytest runs tests and reports results, Playwright and Selenium drive browsers, and requests calls HTTP APIs. The same few ideas appear in all of them: values, collections, functions, classes and assertions. Learning those ideas once pays off across every library.'
+        ]},
+        { h: 'Values, collections and functions', p: [
+          'A variable holds a value. Python detects the type automatically, but you can still see it with type(). A list is an ordered collection, written with square brackets. A dictionary maps keys to values, written with curly braces, which suits data such as a user record with a role and an email.',
+          'A function packages a piece of logic under a name and returns a result. Functions are the main way to avoid repeating yourself. Python uses indentation, four spaces per level, to define blocks, so keep the indentation consistent.'
+        ]},
+        { h: 'Classes and modules', p: [
+          'A class groups related data and behavior. A LoginPage class, for example, can hold the locators for the login form and the actions a user performs on it. A module is a single Python file you can import from elsewhere, and a package is a folder of modules. These are the building blocks of a framework.'
+        ]},
+        { h: 'Tests with pytest', p: [
+          'pytest discovers files named test_*.py and functions named test_*. Inside a test, an assert statement states what must be true. When an assertion fails, pytest shows the values it compared, which is usually enough to start an investigation. Use a virtual environment for each project so its packages do not conflict with others.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: a function and its tests',
+        text: 'The function calculates the percentage of passing results. The tests check a normal case and an edge case that would otherwise cause a division-by-zero error.',
+        code: { lang: 'python', code: '# pass_rate.py\ndef pass_rate(results):\n    """Return the percentage of True values in a list of booleans."""\n    if not results:\n        return 0.0\n    return round(sum(results) / len(results) * 100, 1)\n\n\n# test_pass_rate.py\nfrom pass_rate import pass_rate\n\ndef test_mixed_results():\n    assert pass_rate([True, True, False, True]) == 75.0\n\ndef test_empty_list_does_not_crash():\n    assert pass_rate([]) == 0.0' },
+        after: 'Run pytest -v and you will see both tests pass. The empty-list test matters because without the guard, len(results) would be zero and Python would raise an error. Testing edge cases such as empty input is one of the most common ways a beginner adds real value early.'
+      },
+      keypoints: [
+        'Indentation is part of Python syntax.',
+        'Use one virtual environment per project.',
+        'pytest finds test_*.py files and test_* functions.',
+        'Every test is built from assertions; each assertion states an expectation.'
+      ],
+      task: 'Write a function that counts how many values in a list are negative. Write three pytest tests: a normal list, an empty list, and a list with only positive numbers.',
+      quiz: {
+        q: 'Which naming pattern does pytest use to discover test functions?',
+        o: ['check_*', 'test_*', 'spec_*', 'verify_*'],
+        a: 1,
+        e: 'pytest looks for functions whose names start with test_ inside files named test_*.py.'
+      }
+    },
+
+    {
+      id: 'typescript', chapter: 'programming', title: 'TypeScript for test automation', time: '40 min', visual: null,
+      summary: 'TypeScript adds types to JavaScript. Types catch many mistakes before a test runs, which is why it is the standard language for modern Playwright projects.',
+      sections: [
+        { h: 'Why types help', p: [
+          'A type describes what a value is: a string, a number, a boolean or an object with a known shape. If a function expects a number and receives a string, TypeScript reports the problem in the editor, as you type. Without types, the same mistake may only appear as a failed test in a pipeline hours later.',
+          'TypeScript is the default for modern web automation and for many front-end teams, so the skills carry over to the applications you will test.'
+        ]},
+        { h: 'Interfaces and union types', p: [
+          'An interface describes the shape of an object. For example, a User interface can require a role and an email. A union type limits a value to a list of options, such as "admin" | "viewer". Together they document the data your tests use, and they let the editor warn you about a misspelled field name.'
+        ]},
+        { h: 'Async code and await', p: [
+          'Browser and network operations take time. An async function returns a promise, a value that will be available later, and await pauses execution until that value is ready. Almost every Playwright action is asynchronous, so await appears constantly. Forgetting it is the most common beginner error, and TypeScript usually flags it.'
+        ]},
+        { h: 'Playwright tests', p: [
+          'Create a project with npm init playwright@latest. Each test receives fixtures such as page (a browser tab) and request (an HTTP client). Tests use test() to declare a scenario and expect() to state what must be true.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: a typed API response and a check',
+        text: 'The code defines the shape of a response, calls an endpoint and checks the status and one field. The types document what the test expects.',
+        code: { lang: 'typescript', code: "import { test, expect } from '@playwright/test';\n\ninterface UserResponse {\n  id: number;\n  name: string;\n  role: 'admin' | 'viewer';\n}\n\ntest('fetch user 1 returns the expected shape', async ({ request }) => {\n  const res = await request.get('https://jsonplaceholder.typicode.com/users/1');\n  expect(res.status()).toBe(200);\n\n  const body = (await res.json()) as UserResponse;\n  expect(body.id).toBe(1);\n  expect(typeof body.name).toBe('string');\n});" },
+        after: 'The await before request.get waits for the network. The await before res.json() waits for the body to be read. If you removed the first await, res would be a promise and res.status() would fail. The interface does not change what runs; it tells you and the editor what the data should look like.'
+      },
+      keypoints: [
+        'Forgetting await is the most common beginner bug.',
+        'Prefer const; use let only when a value must change.',
+        'Interfaces and union types document the data your tests rely on.',
+        'expect() is how a test states what must be true.'
+      ],
+      task: 'Write a typed function passRate(passed: number, total: number): number. Then create a Playwright test that opens a page and asserts that its main heading is visible.',
+      quiz: {
+        q: 'What does await do in TypeScript?',
+        o: ['Runs code in parallel forever', 'Pauses until a promise resolves, then gives its value', 'Declares a variable', 'Deletes a failed test'],
+        a: 1,
+        e: 'await pauses the function until the promise finishes and then gives you the result. Without it you hold a promise, not the value.'
+      }
+    },
+
+    /* ============================ AUTOMATION ============================ */
+    {
+      id: 'ui-automation', chapter: 'automation', title: 'UI automation with Playwright and Selenium', time: '35 min', visual: 'flow',
+      summary: 'UI automation drives the interface the way a user does. Good locators and proper waiting separate a reliable test from a fragile one.',
+      sections: [
+        { h: 'Choosing a tool', p: [
+          'Playwright controls Chromium, Firefox and WebKit, waits automatically for elements to become ready, and provides tracing and parallel execution. Selenium is the long-established standard with bindings for many languages. Appium applies similar ideas to native mobile apps. Learn one tool well first; locators, waits and assertions transfer to the others.'
+        ]},
+        { h: 'Locators', p: [
+          'A locator tells the tool which element to act on. The most stable locators describe what a user perceives: the role of a control, its accessible label, its visible text, or a dedicated test ID that developers add for testing. Long absolute XPath expressions copied from a browser tend to break whenever the layout changes.'
+        ]},
+        { h: 'Waiting and asserting', p: [
+          'Modern tools wait for an element to be visible and enabled before acting on it. You still need to state the expected outcome, using an assertion such as expect(...).toBeVisible(). The assertion is retried until it passes or times out, which is far more reliable than a fixed sleep.'
+        ]},
+        { h: 'Page objects', p: [
+          'A page object is a class that holds the locators and actions for one page of the application. Tests then read like a description of user behavior. When a locator changes, you update one file instead of every test that touches that page.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: comparing locator strategies',
+        text: 'The same button can be found in several ways. The table ranks common options by how well they survive normal change to the page.',
+        table: {
+          head: ['Locator', 'Example', 'Survives redesign?', 'Comment'],
+          rows: [
+            ['Role and name', "getByRole('button', { name: 'Login' })", 'Yes', 'Describes meaning; preferred'],
+            ['Label', "getByLabel('Password')", 'Yes', 'Good for form fields'],
+            ['Test ID', "getByTestId('login-btn')", 'Yes', 'Explicit contract with developers'],
+            ['CSS class', "locator('.btn-primary-v2')", 'Often no', 'Classes change with styling'],
+            ['Absolute XPath', "locator('/html/body/div[3]/button')", 'No', 'Breaks on any layout change']
+          ]
+        },
+        code: { lang: 'typescript', code: "import { test, expect } from '@playwright/test';\n\ntest('valid login opens the dashboard', async ({ page }) => {\n  await page.goto('/login');\n  await page.getByLabel('Username').fill('admin@example.com');\n  await page.getByLabel('Password').fill('correct-password');\n  await page.getByRole('button', { name: 'Login' }).click();\n  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();\n});" },
+        after: 'The test describes user actions and one outcome. It never says how long to wait, because the framework retries each step until the element is ready. If the Login button is restyled, this test keeps working, which is the property you want from a locator.'
+      },
+      keypoints: [
+        'Prefer role, label and test-ID locators.',
+        'Assert outcomes with expect() instead of sleeping for a fixed time.',
+        'One page, one class.',
+        'Keep each test independent of the others.'
+      ],
+      task: 'Automate the login page of a public demo site. Use only role or label locators, and end with one assertion on a visible element.',
+      quiz: {
+        q: 'Which locator is generally the most stable?',
+        o: ['An absolute XPath from the document root', 'A role or test ID that describes meaning', 'The element\u2019s position on screen', 'A CSS class generated by a build tool'],
+        a: 1,
+        e: 'Roles and test IDs describe what an element is for, so they survive visual and structural change.'
+      }
+    },
+
+    {
+      id: 'api-testing', chapter: 'automation', title: 'API testing: REST, methods and status codes', time: '35 min', visual: 'request',
+      summary: 'APIs are where business rules meet the network. Testing them directly is faster and more precise than testing the same rules through the interface.',
+      sections: [
+        { h: 'REST in brief', p: [
+          'A REST API exposes resources at URLs such as /users/42. You act on those resources with HTTP methods. GET reads a resource, POST creates one, PUT replaces it, PATCH changes part of it, and DELETE removes it. GET and PUT are idempotent: sending the same request twice has the same effect as sending it once. That property matters when a client retries after a timeout.'
+        ]},
+        { h: 'Status codes', p: [
+          'The response status code summarizes the outcome. The 2xx range means success: 200 OK, 201 Created, 204 No Content. The 3xx range means redirection. The 4xx range means the request was wrong: 400 for malformed input, 401 when authentication is missing, 403 when the user lacks permission, 404 when the resource does not exist, 409 for a conflict, and 422 when the input fails validation. The 5xx range means the server failed: 500, 502 and 503.',
+          'Assert the exact code. Checking only that the response is not an error hides real problems, such as a 201 where you expected a 200.'
+        ]},
+        { h: 'What to check', p: [
+          'For each call, check the status code, the content type, the shape of the body and the key values. For negative cases, check that the request is rejected with the right code and a message that explains the problem without leaking internal details.'
+        ]},
+        { h: 'Tools', p: [
+          'Postman lets you explore an API and save collections of requests with environment variables, such as a base URL that changes between test and production. Newman runs those collections from the command line in a pipeline. In code, the Playwright request fixture, Python requests and RestAssured perform the same checks.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: expected results for a user endpoint',
+        text: 'The table lists the requests a team would check for a simple user resource, with the status code each one should return and the reason.',
+        table: {
+          head: ['Request', 'Expected status', 'What it proves'],
+          rows: [
+            ['GET /users/1', '200', 'An existing user is returned'],
+            ['GET /users/999999', '404', 'Unknown resources are reported correctly'],
+            ['POST /users with a valid body', '201', 'Creation succeeds and reports it'],
+            ['POST /users with no email', '400 or 422', 'Invalid input is rejected'],
+            ['GET /users/1 without a token', '401', 'Protected data requires authentication']
+          ]
+        },
+        code: { lang: 'typescript', code: "import { test, expect } from '@playwright/test';\n\ntest('creating a user returns 201 and the new record', async ({ request }) => {\n  const res = await request.post('/api/users', { data: { name: 'Ada', email: 'ada@example.com' } });\n  expect(res.status()).toBe(201);\n  const body = await res.json();\n  expect(body.name).toBe('Ada');\n  expect(body.id).toBeDefined();\n});" },
+        after: 'Each row in the table becomes one test. Notice that the negative cases carry as much weight as the success case. Most production bugs in APIs appear when the input is wrong, empty or unexpected.'
+      },
+      keypoints: [
+        'Assert exact status codes, not just "not an error".',
+        'Test negative cases: invalid input, missing authentication, unknown resources.',
+        'Never hard-code tokens or base URLs; read them from configuration.',
+        'Check structure and values separately: schema for shape, explicit assertions for values.'
+      ],
+      task: 'Using a public test API, write tests for one GET that returns data, one POST that creates data, and one GET for a missing resource that must return 404.',
+      quiz: {
+        q: 'An API returns 404. What does that most likely mean?',
+        o: ['The server crashed', 'The requested resource was not found', 'Authentication failed', 'The response came from a cache'],
+        a: 1,
+        e: '404 Not Found means the server cannot find the resource at that address. A crash would produce a 5xx code.'
+      }
+    },
+
+    /* ============================ FRAMEWORK ============================ */
+    {
+      id: 'framework-patterns', chapter: 'framework', title: 'Framework architecture and design patterns', time: '45 min', visual: 'layers',
+      summary: 'A framework that grows without structure becomes one large file that nobody wants to touch. Layers and a few well-known patterns keep it understandable as it scales.',
+      sections: [
+        { h: 'Why structure matters', p: [
+          'Without structure, a framework turns into a God class: one file that handles login, test data, reporting and browser creation. Such files are hard to change safely because everything depends on everything else. Layers separate those concerns so that each part changes for one reason.',
+          'A useful rule: tests describe what is verified, and the framework decides how the browser or API is driven. A test that contains selectors or URLs is coupled to the implementation, and it will break when the implementation changes.'
+        ]},
+        { h: 'The layers', p: [
+          'Tests describe scenarios. Facades combine page actions into business flows, such as loginAs(role). Strategies handle variations, such as password login versus single sign-on, selected by configuration. Page objects own locators and UI actions. Repositories provide test data. Drivers and configuration create browsers and environments.',
+          'Each layer may depend only on the layers below it. That keeps dependencies one-directional, so a change in a page object cannot ripple upward into the tests.'
+        ]},
+        { h: 'Key patterns', p: [
+          'A factory creates browsers or API clients, so tests ask for one and never need to know its details. A singleton holds one shared configuration object, which is convenient but can hide shared state, so use it with care. A builder assembles complex request bodies step by step. A strategy swaps one behavior for another at runtime. An observer reacts to events, such as a failed test triggering a screenshot.',
+          'Dependency injection passes collaborators into a class through its constructor instead of creating them inside. This single habit makes code testable, because you can supply a fake when a real dependency is slow or unavailable.'
+        ]},
+        { h: 'Test data', p: [
+          'Keep data out of test logic. Create data through the API where you can, give each test unique values, and clean up afterwards. Data can come from JSON files, spreadsheets, a database or an API. The repository hides that choice, so tests ask for "an admin user" and do not care where it came from.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: a layered login flow',
+        text: 'The test contains no selectors and no URLs. The facade hides the sequence of steps, and the page object is the only place that knows the form.',
+        code: { lang: 'typescript', code: "// pages/LoginPage.ts : knows the screen, nothing else\nexport class LoginPage {\n  constructor(private page: Page) {}\n  async open() { await this.page.goto('/login'); }\n  async submit(user: string, pass: string) {\n    await this.page.getByLabel('Username').fill(user);\n    await this.page.getByLabel('Password').fill(pass);\n    await this.page.getByRole('button', { name: 'Login' }).click();\n  }\n}\n\n// facades/LoginFacade.ts : knows the business step\nexport class LoginFacade {\n  constructor(private login: LoginPage, private data: UserRepository) {}\n  async loginAs(role: string) {\n    const user = this.data.getByRole(role);   // data layer\n    await this.login.open();\n    await this.login.submit(user.username, user.password);\n  }\n}\n\n// tests/login.spec.ts : describes the scenario only\ntest('admin reaches the dashboard', async ({ page }) => {\n  await new LoginFacade(new LoginPage(page), new UserRepository()).loginAs('admin');\n  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();\n});" },
+        after: 'If the login form moves to a different URL, only LoginPage changes. If a second login method is added, a new strategy is created and the facade chooses it. The test continues to read as a single business statement, which is what makes a large suite maintainable.'
+      },
+      keypoints: [
+        'Tests contain no selectors and no hard-coded URLs.',
+        'Each concern lives in one place.',
+        'Inject dependencies rather than creating them inside classes.',
+        'Unique test data per run keeps parallel execution safe.'
+      ],
+      task: 'Take one test that clicks through login and refactor it into a LoginPage class and a LoginFacade with a loginAs() method. The test should shrink to a few lines.',
+      quiz: {
+        q: 'Which pattern lets you change the browser without changing your tests?',
+        o: ['Singleton', 'Factory', 'Builder', 'Observer'],
+        a: 1,
+        e: 'A factory centralizes object creation, so tests request a browser and never depend on which one they receive.'
+      }
+    },
+
+    /* ============================ RELIABILITY ============================ */
+    {
+      id: 'anti-flakiness', chapter: 'reliability', title: 'Anti-flakiness: building tests you can trust', time: '40 min', visual: 'flaky',
+      summary: 'A flaky test passes and fails without any change to the code. Flakiness erodes trust in the whole suite, so removing it is a core SDET skill.',
+      sections: [
+        { h: 'What flakiness costs', p: [
+          'Teams that live with flaky tests start rerunning builds until they turn green, then stop trusting red results, and eventually miss real defects. The damage is to confidence before it is to the code. Track the flake rate for each test the way you track defects, and treat a rising rate as a problem to fix.'
+        ]},
+        { h: 'Common causes', p: [
+          'Timing is the most frequent cause: the test acts before the page is ready. Other causes include unstable locators, shared or leftover test data, tests that only pass in a particular order, slow or differently configured environments, third-party services, and logic that depends on the current date or time.',
+          'Diagnose by asking when the failure happens. Only in CI suggests an environment or parallelism issue. Only after another test has run suggests shared state. Only at certain times of day suggests a time dependency.'
+        ]},
+        { h: 'The main fixes', p: [
+          'Replace fixed sleeps with waits for a condition. Wait for a business outcome, such as a confirmation message, or for a specific network response. Assert that an element is visible and enabled before acting on it. Give each test its own data with its own setup and cleanup. Use API calls for setup when the user interface is not what you are testing, because API calls are faster and more stable.'
+        ]},
+        { h: 'Retries and quarantine', p: [
+          'Retries help with short-lived environment problems such as a network blip. Make them visible: record which tests needed a retry, because a retry can also hide a real problem. Quarantine a test that keeps flaking by moving it to a separate job with a named owner and a deadline for the fix.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: replacing a sleep with a real outcome',
+        text: 'The first version guesses how long saving takes. The second version waits for the result the user actually cares about.',
+        code: { lang: 'typescript', code: "// Flaky: guesses how long the save takes\nawait page.getByRole('button', { name: 'Save' }).click();\nawait page.waitForTimeout(3000);\nawait expect(page.getByText('Saved successfully')).toBeVisible();\n\n// Stable: waits for the outcome, with a retry window\nawait page.getByRole('button', { name: 'Save' }).click();\nawait expect(page.getByText('Saved successfully')).toBeVisible({ timeout: 10000 });\n\n// Stable: unique data per run, so runs never collide\nconst email = 'user_' + Date.now() + '@example.com';" },
+        table: {
+          head: ['Symptom', 'Likely cause', 'Fix'],
+          rows: [
+            ['Fails only on a slow CI runner', 'Fixed sleep too short', 'Wait for the outcome instead'],
+            ['Fails only when run in parallel', 'Shared user or record', 'Unique data per test'],
+            ['Fails after a specific other test', 'Leftover state', 'Clean up or reset in beforeEach'],
+            ['Fails intermittently on one locator', 'Element re-renders', 'Wait for visible and enabled before acting']
+          ]
+        },
+        after: 'The fixed three-second wait passes on a fast machine and fails on a slow one. The outcome-based version passes whenever the save actually completes, within a ten-second window. The table turns the symptom into a likely cause, which is the first step of root-cause analysis.'
+      },
+      keypoints: [
+        'No fixed sleeps. Wait for a condition or a response.',
+        'Assert before acting: visible and enabled.',
+        'Unique data and independent tests.',
+        'Track retries, and quarantine persistent flakes with an owner.'
+      ],
+      task: 'Find one sleep in your suite and replace it with an assertion on a real outcome. Run the test twenty times and record how many runs fail.',
+      quiz: {
+        q: 'What is the best replacement for waitForTimeout(5000)?',
+        o: ['A longer timeout', 'Waiting for a visible confirmation or a specific response', 'Running the test twice', 'Removing the assertion'],
+        a: 1,
+        e: 'A fixed time is a guess. Waiting for the observable outcome works on fast and slow machines alike.'
+      },
+      lab: 'flaky'
+    },
+
+    {
+      id: 'cicd', chapter: 'reliability', title: 'CI/CD and GitHub Actions', time: '45 min', visual: 'pipeline',
+      summary: 'CI/CD moves testing from the end of a project into every change. A well-designed pipeline gives fast feedback on each change and protects production.',
+      sections: [
+        { h: 'Continuous integration and delivery', p: [
+          'Continuous integration (CI) means every change is built and tested automatically, usually on every push. Continuous delivery keeps the software in a releasable state at all times, and continuous deployment releases automatically once the checks pass. In each case testing is part of every commit rather than a phase at the end.'
+        ]},
+        { h: 'Anatomy of a pipeline', p: [
+          'A trigger starts the pipeline: a push, a pull request, a schedule or a manual run. Stages run in order, such as build, test and deploy. Jobs inside one stage can run in parallel, and steps are the individual commands. Runners are the machines that execute the work. Caches speed up dependency installation. Artifacts keep reports, screenshots and traces. Secrets provide credentials without exposing them in the repository.'
+        ]},
+        { h: 'Test strategy for pipelines', p: [
+          'Not every test needs to run on every change. A common strategy runs smoke tests on each pull request for fast feedback, a broader regression when code merges into main, and the full suite, performance checks and long-running tests on a nightly schedule. Quality gates, such as no failing critical tests, decide whether a build may be promoted to staging.'
+        ]},
+        { h: 'GitHub Actions', p: [
+          'Workflows are YAML files in the .github/workflows folder. Each one declares triggers with on, jobs with runs-on, and steps that either use a prepared action or run a command. A matrix runs the same job across several browsers or operating systems. Uploading the Playwright report as an artifact lets you inspect a failure after the run has finished.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: a workflow that uploads the report on failure',
+        text: 'This workflow runs Playwright on each push and each pull request. It keeps the report when a test fails.',
+        code: { lang: 'yaml', code: "name: e2e-tests\non:\n  push:\n  pull_request:\njobs:\n  playwright:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: 20\n      - run: npm ci\n      - run: npx playwright install --with-deps\n      - run: npx playwright test\n      - uses: actions/upload-artifact@v4\n        if: failure()\n        with:\n          name: playwright-report\n          path: playwright-report/" },
+        table: {
+          head: ['Step', 'What it does', 'Why it is there'],
+          rows: [
+            ['checkout', 'Downloads the repository', 'The job needs the code'],
+            ['setup-node', 'Installs Node 20', 'A known runtime version'],
+            ['npm ci', 'Installs exact dependencies', 'Reproducible installs from the lock file'],
+            ['playwright install', 'Installs browsers and system libraries', 'Browsers are not part of the repo'],
+            ['playwright test', 'Runs the suite', 'The actual quality check'],
+            ['upload-artifact', 'Saves the report if the run failed', 'Failures can be inspected later']
+          ]
+        },
+        after: 'The if: failure() condition means the report is uploaded only when something went wrong, which keeps storage use low. Each step is small and named, so when the pipeline breaks you can see exactly which step did.'
+      },
+      keypoints: [
+        'Fast feedback on pull requests; deeper checks on merge and nightly.',
+        'Always keep reports and traces when a test fails.',
+        'Store secrets in the CI secrets store, never in the repository.',
+        'Make quality gates explicit so promotion decisions are objective.'
+      ],
+      task: 'Add this workflow to a repository with your tests. Push a deliberate failing test, confirm the report appears as an artifact, then fix the test and watch the pipeline turn green.',
+      quiz: {
+        q: 'Which trigger best supports fast feedback on each proposed change?',
+        o: ['A nightly schedule', 'A pull request trigger', 'Manual runs only', 'A release tag'],
+        a: 1,
+        e: 'A pull request trigger runs the tests on each proposed change before it merges, which is the quickest useful feedback loop.'
+      },
+      lab: 'pipeline'
+    },
+
+    {
+      id: 'jenkins', chapter: 'reliability', title: 'Jenkins: getting started', time: '40 min', visual: 'pipeline',
+      summary: 'Jenkins is a self-hosted automation server common in enterprises. Learning it gives you control over where and how your pipelines run.',
+      sections: [
+        { h: 'What Jenkins is', p: [
+          'Jenkins is an open-source automation server. You install it, connect it to your repositories, and define pipelines in a Jenkinsfile kept alongside your code. Many enterprises choose it because the build machines and data stay inside their own network.'
+        ]},
+        { h: 'Running Jenkins locally', p: [
+          'Docker is the simplest way to learn. The official image starts a complete server that you open in a browser. The first time, Jenkins asks for an initial admin password, which it prints in the container logs. After you install the suggested plugins, create a Pipeline job that reads its definition from your repository.'
+        ]},
+        { h: 'Declarative pipelines', p: [
+          'A declarative Jenkinsfile has a pipeline block, an agent that says where the work runs, a set of stages, and steps inside each stage. A post block runs after the stages finish. Using post with always makes sure results are published even when tests fail, so the evidence is never lost.'
+        ]},
+        { h: 'Next concepts', p: [
+          'Credentials store secrets safely inside Jenkins. Agents can be separate machines or containers, which is how you run browsers on a different operating system. Shared libraries let teams reuse pipeline code. Multibranch pipelines create a job for each branch automatically, which fits a pull request workflow.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: a Jenkinsfile for a Playwright project',
+        text: 'Start Jenkins with Docker, then add the Jenkinsfile below to the root of your repository and point a Pipeline job at it.',
+        code: { lang: 'bash', code: '# Start Jenkins (ports: web UI 8080, agent port 50000)\ndocker run -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts-jdk17\n# Open http://localhost:8080 and use the admin password printed in the logs.' },
+        code2: { lang: 'groovy', code: "pipeline {\n  agent any\n  stages {\n    stage('Install') { steps { sh 'npm ci' } }\n    stage('Browsers') { steps { sh 'npx playwright install --with-deps' } }\n    stage('Test') { steps { sh 'npx playwright test' } }\n  }\n  post {\n    always {\n      junit allowEmptyResults: true, testResults: 'results/*.xml'\n    }\n  }\n}" },
+        after: 'The agent any line lets Jenkins use any available machine, which is fine for learning. The post block publishes JUnit results after every run, so a failed run still produces a readable report. Playwright must be configured to write a JUnit file into the results folder for that last step to find something.'
+      },
+      keypoints: [
+        'Docker is the quickest way to learn Jenkins.',
+        'Keep the Jenkinsfile in the repository, under version control.',
+        'Use post { always } to publish reports even when a stage fails.',
+        'Put credentials in Jenkins, never in the file itself.'
+      ],
+      task: 'Run Jenkins in Docker, create a Pipeline job that points at your repository, and get a green build that runs at least one test.',
+      quiz: {
+        q: 'Where should a mature team keep its pipeline definition?',
+        o: ['Only in the Jenkins web interface', 'In a Jenkinsfile stored in the repository', 'On a sticky note', 'Inside the test report'],
+        a: 1,
+        e: 'A pipeline kept in the repository is versioned, reviewed and reproducible, just like the tests it runs.'
+      },
+      lab: 'pipeline'
+    },
+
+    /* ============================ SYSTEM DESIGN ============================ */
+    {
+      id: 'architecture', chapter: 'system', title: 'Architecture styles for testers', time: '45 min', visual: 'architecture',
+      summary: 'A tester cannot test a system well without knowing its parts. Architecture shows where requests travel, where data lives and where failures can start.',
+      sections: [
+        { h: 'Why architecture matters to testing', p: [
+          'Every boundary between components is a place where something can fail: a network call can time out, a message can arrive twice, a service can return data in an unexpected shape. Knowing the architecture tells you where to aim your tests and which failures are most likely.'
+        ]},
+        { h: 'Common architecture styles', p: [
+          'A monolith is one deployable application. It is simple to build and test, but a large team working in one codebase can slow each other down. A modular monolith keeps a single deployment and enforces clear boundaries between internal modules. Microservices split the system into small services that each own their data and deployment. They give teams independence, but every call between services can fail, and the system is harder to test end to end.',
+          'Event-driven systems communicate through events, such as "order placed", rather than direct calls. Producers do not need to know who consumes the event, which decouples the parts but makes the flow harder to follow. Serverless systems run small functions on demand and scale automatically, with the trade-off of cold starts and vendor-specific behavior.'
+        ]},
+        { h: 'Layers and boundaries', p: [
+          'Layered architecture separates presentation, business logic and data. Hexagonal architecture goes further: the business logic knows nothing about the database or the user interface, and both connect to it through defined ports. That independence makes the core logic easy to test without starting the whole system.'
+        ]},
+        { h: 'What it means for tests', p: [
+          'A monolith needs strong end-to-end and integration coverage. Microservices need contract tests, which confirm that a consumer and a provider agree on the shape of their messages, plus monitoring that follows a request across services. Event-driven systems need tests for delayed messages, duplicate messages and messages that arrive out of order.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: testing an order flow across services',
+        text: 'An online order passes through four components. The table maps each boundary to the kind of test that gives the most useful signal.',
+        table: {
+          head: ['Boundary', 'Typical failure', 'Test type'],
+          rows: [
+            ['Browser to checkout API', 'Wrong status or body for a valid cart', 'API test'],
+            ['Checkout to payment service', 'Payment request has the wrong amount or currency', 'Contract test'],
+            ['Checkout to order database', 'Order saved with a missing or duplicate row', 'Database check'],
+            ['Order service to email service', 'Confirmation sent twice after a retry', 'Integration test with a fake broker'],
+            ['Whole flow', 'Cart total differs from the amount charged', 'End-to-end UI test']
+          ]
+        },
+        after: 'A single end-to-end test cannot show where the problem is. The table spreads coverage across the boundaries, so a failure points to one component. This layered approach is why architecture knowledge makes you faster at diagnosis, not only at writing tests.'
+      },
+      keypoints: [
+        'Know the boundaries; that is where defects cluster.',
+        'Microservices add network failure modes to every call.',
+        'Use contract tests between services that change independently.',
+        'Start simple and split only when there is a clear reason.'
+      ],
+      task: 'Draw the architecture of an app you use every day. Mark where you would add UI tests, API tests, contract tests and database checks.',
+      quiz: {
+        q: 'What does a contract test check between two services?',
+        o: ['Their CPU usage', 'That they agree on the shape of the requests and responses they exchange', 'Their user interface colors', 'Their deployment region'],
+        a: 1,
+        e: 'A contract test confirms that the consumer and the provider agree on messages, so an independent change cannot silently break the integration.'
+      }
+    },
+
+    {
+      id: 'data-scale', chapter: 'system', title: 'Read-heavy and write-heavy systems', time: '45 min', visual: 'cache',
+      summary: 'Most products are read-heavy. Estimating the read-to-write ratio first tells you which design choices, and which tests, matter most.',
+      sections: [
+        { h: 'Read-heavy and write-heavy', p: [
+          'A read-heavy system serves many more reads than writes. A product catalog or news feed is read-heavy: many people view, few people change. A write-heavy system receives a steady flood of writes, such as telemetry, logs or order events. Before you design anything, estimate the ratio, because it drives almost every later decision.'
+        ]},
+        { h: 'Estimating load', p: [
+          'Back-of-the-envelope estimation converts a product description into numbers. Suppose 100 million new links are created each month. That is about 40 writes per second on average. With a 100-to-1 read ratio, reads are about 4,000 per second. Peak traffic is usually several times the average, so a design should handle the peak, not just the mean.'
+        ]},
+        { h: 'Tools for read-heavy load', p: [
+          'A cache keeps answers in fast memory. The most common pattern is cache-aside: check the cache first and, on a miss, read the database and store the result for later requests. Read replicas spread queries across copies of the database. A content delivery network (CDN) serves static files from locations close to users.'
+        ]},
+        { h: 'Tools for write-heavy load', p: [
+          'A queue absorbs bursts so workers can process messages at their own pace. Batching combines many small writes into fewer, larger ones. Partitioning, also called sharding, spreads data across several servers. Append-only logs make writes fast because they only add to the end of a file.'
+        ]},
+        { h: 'Consistency trade-offs', p: [
+          'A cache can return stale data, so you must decide how stale is acceptable and how the cache is invalidated when the source changes. The CAP theorem states that when a network partition splits a distributed system, it must choose between consistency and availability. PACELC adds that even without a partition, there is a trade-off between latency and consistency.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: estimating and caching a URL shortener',
+        text: 'The estimate below decides whether a cache is worth it. The code shows the cache-aside logic a tester would verify.',
+        table: {
+          head: ['Quantity', 'Calculation', 'Result'],
+          rows: [
+            ['New links per second', '100,000,000 / (30 days × 86,400 s)', 'About 40 writes per second'],
+            ['Reads per second (average)', '40 × 100 read-to-write ratio', 'About 4,000 reads per second'],
+            ['Reads per second (peak, 3×)', '4,000 × 3', 'About 12,000 reads per second'],
+            ['Share of reads that are repeats', 'Popular links are clicked many times', 'Assume 80 percent: a cache is worth it']
+          ]
+        },
+        code: { lang: 'python', code: "def get_long_url(short_code, cache, db, ttl_seconds=300):\n    url = cache.get(short_code)          # 1. try the cache first\n    if url is not None:\n        return url                       # cache hit: fast path\n    url = db.find_long_url(short_code)   # 2. cache miss: read the source of truth\n    if url is not None:\n        cache.set(short_code, url, ttl_seconds)  # 3. keep it for next time\n    return url" },
+        after: 'At 12,000 peak reads per second, serving every read from the database would overload a typical single instance. With an 80 percent hit rate, only about 2,400 reads per second reach the database. The tester’s job here is to check both paths, a hit and a miss, and to check that a changed URL is not served stale after its time-to-live.'
+      },
+      keypoints: [
+        'Measure the read-to-write ratio before choosing a design.',
+        'Design for peak load, not the average.',
+        'Cache invalidation is the hard part; test it explicitly.',
+        'Decide, with stakeholders, how stale data may be.'
+      ],
+      task: 'For a product catalog with 2 million daily page views and 5,000 product updates per day, estimate reads and writes per second, then choose one caching strategy and justify it in three sentences.',
+      quiz: {
+        q: 'In cache-aside, what happens on a cache miss?',
+        o: ['The request fails', 'The application reads the database, then stores the value in the cache', 'The cache creates the data itself', 'The CDN is cleared'],
+        a: 1,
+        e: 'On a miss the application loads the value from the source of truth and fills the cache, so the next request is fast.'
+      }
+    },
+
+    /* ============================ QUALITY OPERATIONS ============================ */
+    {
+      id: 'database-testing', chapter: 'quality', title: 'Database testing and SQL validation', time: '40 min', visual: 'scan',
+      summary: 'Some defects exist only in stored data: wrong totals, duplicate records, orphaned rows. User interface tests cannot see them, so testers check the database directly.',
+      sections: [
+        { h: 'Why check the database', p: [
+          'A user sees what the application chooses to display, but the truth lives in the database. A screen can show the right total while the stored value is wrong, or it can show one order when two were saved. A database check confirms that what was displayed matches what was stored.'
+        ]},
+        { h: 'SQL you need first', p: [
+          'SELECT with WHERE, ORDER BY and GROUP BY covers most checks. JOIN combines related tables. A LEFT JOIN with a condition that the right side is NULL finds orphans, which are child rows with no parent. COUNT and SUM compare totals. Window functions such as ROW_NUMBER help when you need to rank rows or find the second of two duplicates.'
+        ]},
+        { h: 'Validation patterns', p: [
+          'Compare row counts between a source and a target after a migration. Check that required columns contain no nulls. Find duplicates by grouping on the business key and keeping groups with more than one row. Confirm that every foreign key points to an existing row. Compare sums or checksums to confirm that values moved without change.'
+        ]},
+        { h: 'Transactions and cleanup', p: [
+          'A transaction groups statements so that all of them succeed or none of them do. Test setup can run inside a transaction that is rolled back at the end, which leaves the database as it was. Be aware that concurrent tests can see each other’s uncommitted data depending on the isolation level.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: three validation queries after an order is placed',
+        text: 'After the UI places an order, these queries confirm the stored data is complete and consistent.',
+        code: { lang: 'sql', code: "-- 1. The new order exists exactly once\nSELECT COUNT(*) AS n FROM orders WHERE external_ref = 'TEST-1001';   -- expect 1\n\n-- 2. Every order line belongs to an existing order (no orphans)\nSELECT l.id\nFROM order_lines l\nLEFT JOIN orders o ON o.id = l.order_id\nWHERE o.id IS NULL;                                                    -- expect 0 rows\n\n-- 3. The stored total equals the sum of its lines\nSELECT o.id, o.total, SUM(l.amount) AS lines_total\nFROM orders o\nJOIN order_lines l ON l.order_id = o.id\nWHERE o.external_ref = 'TEST-1001'\nGROUP BY o.id, o.total\nHAVING o.total <> SUM(l.amount);                                       -- expect 0 rows" },
+        after: 'Each query states an expected result. Query 1 catches duplicate submissions. Query 2 catches lines saved without their order. Query 3 catches a total that the user interface calculated differently from the stored lines. A passing UI test alone would miss all three.'
+      },
+      keypoints: [
+        'Verify the database after the user interface action, not only the screen.',
+        'Look for orphans and duplicates explicitly.',
+        'Compare totals, not just row counts.',
+        'Clean up test data reliably, ideally by rolling back.'
+      ],
+      task: 'Write a query that finds customers who have more than one account with the same email address, and explain what you would do with the result.',
+      quiz: {
+        q: 'Which SQL pattern finds records in one table that have no match in another?',
+        o: ['INNER JOIN with GROUP BY', 'LEFT JOIN with a NULL check on the right table', 'SELECT DISTINCT only', 'UNION ALL'],
+        a: 1,
+        e: 'A LEFT JOIN keeps every left-side row. Filtering where the right side is NULL leaves only the unmatched rows.'
+      }
+    },
+
+    {
+      id: 'performance', chapter: 'quality', title: 'Performance testing', time: '40 min', visual: 'latency',
+      summary: 'A feature that works for one user can fail for a thousand. Performance testing reveals how the system behaves under load before real users find out.',
+      sections: [
+        { h: 'Types of performance test', p: [
+          'Load testing applies the traffic you expect, to confirm the system meets its targets. Stress testing pushes beyond expected capacity to find the breaking point and how the system recovers. Spike testing applies a sudden burst, such as a sale announcement. Soak testing runs a moderate load for hours to reveal memory leaks and gradual slowdown.'
+        ]},
+        { h: 'Metrics that matter', p: [
+          'Throughput is the number of requests completed per second. Latency is the time a request takes, and averages hide problems, so use percentiles. The p50 describes the typical user. The p95 and p99 describe the slow tail, the requests that a small share of users experience. Track the error rate and resource use such as CPU and memory, because they explain why latency rises.'
+        ]},
+        { h: 'Tools', p: [
+          'JMeter is a mature tool with a graphical editor and command-line runs, common in large organizations. k6 lets you script load tests in JavaScript, define pass and fail thresholds in code, and run easily inside a pipeline. Gatling is Scala-based and produces detailed reports. For a developer-led team, k6 is a practical starting point.'
+        ]},
+        { h: 'Designing a meaningful test', p: [
+          'A useful test models real user behavior: which pages are visited, how long users pause between actions, and how traffic ramps up. Record a baseline first, so that a later run can be compared against it. Confirm that the load generator itself is not the bottleneck, for example by checking its CPU.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: a k6 script with a threshold, and how to read it',
+        text: 'The script sends steady traffic and fails the run if the 95th-percentile response time exceeds 500 milliseconds.',
+        code: { lang: 'javascript', code: "import http from 'k6/http';\nimport { check, sleep } from 'k6';\n\nexport const options = {\n  vus: 5,                  // five virtual users\n  duration: '30s',\n  thresholds: {\n    http_req_duration: ['p(95)<500'],   // fail if p95 >= 500 ms\n    http_req_failed: ['rate<0.01'],     // fail if over 1% of requests fail\n  },\n};\n\nexport default function () {\n  const res = http.get('https://test.k6.io');\n  check(res, { 'status is 200': (r) => r.status === 200 });\n  sleep(1);\n}" },
+        table: {
+          head: ['Result line', 'Meaning', 'Action if it is bad'],
+          rows: [
+            ['http_req_duration p(95)', 'Slow tail of response times', 'Look for slow queries or blocked threads'],
+            ['http_req_failed rate', 'Share of requests that failed', 'Check error logs for the failing endpoint'],
+            ['iterations per second', 'Throughput achieved', 'Compare with the target and the baseline'],
+            ['threshold crossed', 'The run is marked as failed', 'Investigate before changing the threshold']
+          ]
+        },
+        after: 'The threshold turns a performance goal into a pass or fail result that a pipeline can act on. Read the percentile, not the average, because a healthy average can hide a slow tail. Only change a threshold after you have agreed the new target with the team, not to make a failing run pass.'
+      },
+      keypoints: [
+        'Use percentiles, not averages.',
+        'Define thresholds before running the test.',
+        'Record a baseline so future runs have something to compare against.',
+        'Check that the load generator is not the bottleneck.'
+      ],
+      task: 'Write a k6 script that sends traffic with five virtual users for thirty seconds to a public test endpoint, with a threshold that fails the run if p95 is above 500 milliseconds.',
+      quiz: {
+        q: 'Why is p95 often more useful than the average latency?',
+        o: ['It is always smaller than the average', 'It reveals the slow tail that averages hide', 'It measures CPU use', 'k6 requires it'],
+        a: 1,
+        e: 'A few very slow requests barely move the average, but they define the experience of the users who hit them. p95 shows that.'
+      },
+      lab: 'latency'
+    },
+
+    {
+      id: 'debugging-rca', chapter: 'quality', title: 'Debugging, reporting and root-cause analysis', time: '40 min', visual: 'rca',
+      summary: 'When a test fails, the job is to find the real cause, not only the symptom. Root-cause analysis turns one failure into a lasting improvement.',
+      sections: [
+        { h: 'Reading a failure', p: [
+          'Start with the failed assertion and the exact line that failed. Read the error message, then check the evidence: screenshot, video, trace, network log and browser console. Note the environment, the branch, and any change that landed recently. A clear first reading saves hours of guessing.'
+        ]},
+        { h: 'Classify before fixing', p: [
+          'A product defect means the application behaves incorrectly. A test defect means the test itself is wrong. An environment issue means infrastructure or configuration is wrong. A data issue means the input state is not what the test expects. A flaky result means the outcome changes without any change in code. The classification decides who acts next and how urgently.'
+        ]},
+        { h: 'Root-cause analysis', p: [
+          'Root-cause analysis (RCA) looks for the underlying reason, not the symptom. Build a timeline of what happened and when. Then use the 5 Whys: ask why the failure occurred, then ask why that happened, and continue until you reach a process or system cause, usually five steps. A fishbone diagram groups candidate causes into categories such as people, process, tools, environment, data and code. Confirm the cause by reproducing it or by finding evidence that rules out the alternatives.'
+        ]},
+        { h: 'Writing the report', p: [
+          'An RCA report contains a summary, the impact, a timeline, the root cause, contributing factors, corrective actions that fix the cause, preventive actions that stop recurrence, and an owner and deadline for each action. Keep the report blameless. Focus on the system and the process, so people report problems honestly rather than hiding them.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: a 5 Whys analysis of a failing checkout test',
+        text: 'The checkout test fails on the build server only. The chain below moves from the symptom to a cause that can be fixed.',
+        table: {
+          head: ['Level', 'Question', 'Answer'],
+          rows: [
+            ['Symptom', 'What failed?', 'The "Place order" button was not clicked; the test timed out'],
+            ['Why 1', 'Why was the button not clicked?', 'A cookie banner covered it'],
+            ['Why 2', 'Why was the banner there?', 'It loads after the page, so it appeared late in the run'],
+            ['Why 3', 'Why did the test not wait for it?', 'The test assumed the page was ready at load'],
+            ['Why 4', 'Why was that assumption allowed?', 'The shared page object has no wait for the banner state'],
+            ['Root cause', 'Which process allowed it?', 'Page objects were written without a readiness definition']
+          ]
+        },
+        after: 'The fix is not to add a longer timeout to one test. The corrective action is to define readiness in the shared page object, so every test benefits. The preventive action is a review checklist item: every new page object defines what "ready" means. This is what makes the analysis worth doing.'
+      },
+      keypoints: [
+        'Gather evidence before forming a theory.',
+        'Classify the failure before assigning it.',
+        'Ask why until you reach a system cause, then verify it.',
+        'Write blameless reports with owners and deadlines.'
+      ],
+      task: 'Take a failed test from your suite, or invent one, and write a one-page RCA with a timeline, a 5 Whys chain, the root cause and two actions.',
+      quiz: {
+        q: 'What is the purpose of the 5 Whys technique?',
+        o: ['To count test cases', 'To reach the underlying cause instead of the symptom', 'To choose browsers', 'To schedule releases'],
+        a: 1,
+        e: 'Repeating why exposes the chain of causes, so the fix can address the process that allowed the failure.'
+      }
+    },
+
+    {
+      id: 'risk-analysis', chapter: 'quality', title: 'Risk analysis and risk-based testing', time: '35 min', visual: 'matrix',
+      summary: 'Nobody can test everything. Risk analysis decides where to focus effort: the parts most likely to fail and most damaging if they do.',
+      sections: [
+        { h: 'Why risk analysis', p: [
+          'Time and budget are limited, so testing must be selective. Risk analysis gives you a defensible reason for what you test first, what you test most deeply, and what you accept as residual risk. Without it, testing tends to follow whatever is easiest to automate.'
+        ]},
+        { h: 'Likelihood and impact', p: [
+          'Rate the likelihood of each risk and its impact on a scale such as 1 to 3, where 1 is low and 3 is high. Multiply the two numbers to get a score from 1 to 9. Scores from 6 to 9 are high priority and deserve the most thorough and frequent testing. Scores from 3 to 5 are medium, and 1 to 2 are low.'
+        ]},
+        { h: 'Applying risk to automation', p: [
+          'Tag tests by risk. Run high-risk tests on every pull request, medium-risk tests nightly, and low-risk tests less often. Keep a register of risks, and track which high-risk items have no automated coverage. Those gaps are the most valuable things to automate next.'
+        ]},
+        { h: 'Communicating risk', p: [
+          'State each risk in plain language: what could happen, to whom, how likely it is, what reduces it today, and what remains open. Stakeholders can only accept a risk they understand, and a clear statement of residual risk is one of the most useful things a tester can write before a release.'
+        ]}
+      ],
+      example: {
+        title: 'Worked example: a small risk register for an online store',
+        text: 'The register lists five risks, scores them and states the testing decision for each.',
+        table: {
+          head: ['Risk', 'L', 'I', 'Score', 'Testing decision'],
+          rows: [
+            ['Payment charged twice on retry', '2', '3', '6 (high)', 'Automated API test on every pull request'],
+            ['Discount applied incorrectly at checkout', '3', '2', '6 (high)', 'Automated boundary tests with data-driven cases'],
+            ['Search results slow under load', '2', '2', '4 (medium)', 'Nightly performance test against a baseline'],
+            ['Profile photo upload fails for large files', '2', '1', '2 (low)', 'Manual check each release'],
+            ['Footer links broken', '1', '1', '1 (low)', 'Covered by a weekly link checker']
+          ]
+        },
+        after: 'The two high scores receive the most automated coverage and run on every change. Low scores are not ignored; they are handled by cheaper methods. The register also makes the trade-off visible, so when a manager asks why the footer is not automated, the answer is already written down.'
+      },
+      keypoints: [
+        'Risk equals likelihood multiplied by impact.',
+        'Tag tests by risk and run them on the right schedule.',
+        'Report residual risk, not only test counts.',
+        'Revisit the register at every release.'
+      ],
+      task: 'List five features of an app you know. Score each for likelihood and impact, then decide which two tests you would automate first and why.',
+      quiz: {
+        q: 'A risk has likelihood 3 and impact 3. What priority is it?',
+        o: ['Low', 'Medium', 'High', 'Not a real risk'],
+        a: 2,
+        e: '3 multiplied by 3 gives 9, which falls in the high-priority band of 6 to 9.'
+      },
+      lab: 'risk'
+    }
+  ],
+
+  glossary: [
+    { term: 'Assertion', def: 'A statement in a test that must be true. If it is false, the test fails and reports the values it compared.' },
+    { term: 'Boundary value', def: 'An input at the edge of a valid range. Defects cluster at these edges, so they are tested first.' },
+    { term: 'Cache hit / miss', def: 'A hit means the answer was already in fast memory. A miss means the slower source had to be queried.' },
+    { term: 'CAP theorem', def: 'When a network partition splits a distributed system, it must choose between consistency and availability.' },
+    { term: 'Contract test', def: 'A test that confirms two services agree on the shape of the messages they exchange.' },
+    { term: 'CI/CD', def: 'Continuous integration builds and tests every change; continuous delivery keeps the software releasable at all times.' },
+    { term: 'Flaky test', def: 'A test that passes and fails without any change to the code or the application.' },
+    { term: 'Idempotent', def: 'An operation whose repeated execution has the same effect as a single execution. GET and PUT are typically idempotent.' },
+    { term: 'Latency percentile (p95)', def: 'The response time that 95 percent of requests beat. It exposes the slow tail that an average hides.' },
+    { term: 'Locator', def: 'The description a tool uses to find an element on a page, such as a role, a label or a test ID.' },
+    { term: 'Page object', def: 'A class that holds the locators and actions for one page of an application.' },
+    { term: 'Pull request', def: 'A proposal to merge a branch, reviewed by teammates before the change is accepted.' },
+    { term: 'Quality gate', def: 'A rule in a pipeline that stops promotion, for example when a critical test fails.' },
+    { term: 'Read-heavy system', def: 'A system where reads far outnumber writes. Caches and replicas are the usual tools.' },
+    { term: 'Root cause', def: 'The underlying reason a failure happened, as opposed to the visible symptom.' },
+    { term: 'Smoke test', def: 'A small set of checks confirming that the most important paths still work after a change.' },
+    { term: 'Status code', def: 'A number in an HTTP response that summarizes the outcome, such as 200 for success or 404 for not found.' },
+    { term: 'Strategy pattern', def: 'Swapping one of several interchangeable behaviors at runtime, such as password or single sign-on login.' },
+    { term: 'Throughput', def: 'The number of requests a system completes per second.' },
+    { term: 'Virtual environment', def: 'An isolated set of Python packages for one project, so that dependencies do not conflict.' }
+  ]
+};
+
+/* ==========================================================================
+   ROBBERCAT's Journey: diagrams used in lessons.
+   Restrained: thin lines, theme colors, slow and subtle motion.
+   Each function returns an HTML string with a caption.
+   ========================================================================== */
+(function () {
+  const cap = (text) => `<figcaption>${text}</figcaption>`;
+  const fig = (svg, caption) => `<figure class="figure">${svg}${cap(caption)}</figure>`;
+
+  const V = {
+
+    lifecycle() {
+      const steps = ['Requirements', 'Planning', 'Design', 'Environment', 'Execution', 'Closure'];
+      let s = '<svg class="vis" viewBox="0 0 660 130" role="img" aria-label="Testing life cycle, six phases">';
+      steps.forEach((t, i) => {
+        const x = 55 + i * 110;
+        s += `<g class="step" style="--i:${i}"><rect class="box" x="${x - 48}" y="30" width="96" height="44" rx="8"/>` +
+             `<text class="label" x="${x}" y="57" font-size="12">${t}</text></g>`;
+        if (i < steps.length - 1) s += `<path class="flow" d="M${x + 48} 52 H${x + 62}"/>`;
+      });
+      s += '<text class="sub" x="330" y="104">Each phase has entry and exit criteria, so the next phase starts only when the previous one is complete.</text>';
+      return fig(s + '</svg>', 'The testing life cycle runs in phases, each with defined entry and exit criteria.');
+    },
+
+    branch() {
+      return fig(`<svg class="vis" viewBox="0 0 660 170" role="img" aria-label="Feature branch created from main and merged back">
+        <path class="line draw" d="M40 60 H620"/>
+        <path class="flow draw b" d="M190 60 C220 60 220 124 260 124 H420 C460 124 460 60 500 60"/>
+        <circle cx="40" cy="60" r="5" class="dot"/><circle cx="190" cy="60" r="5" class="dot"/>
+        <circle cx="500" cy="60" r="5" class="dot"/><circle cx="620" cy="60" r="5" class="dot"/>
+        <circle cx="260" cy="124" r="4" class="dot2"/><circle cx="340" cy="124" r="4" class="dot2"/><circle cx="420" cy="124" r="4" class="dot2"/>
+        <text class="sub" x="40" y="42">main</text>
+        <text class="sub" x="300" y="150">feature/login-smoke-test</text>
+        <text class="sub" x="500" y="42">merge</text>
+      </svg>`, 'A feature branch is created from main, developed separately, and merged after review.');
+    },
+
+    flow() {
+      return fig(`<svg class="vis" viewBox="0 0 660 230" role="img" aria-label="Automated steps on a login form">
+        <rect class="box" x="120" y="14" width="420" height="200" rx="10"/>
+        <rect class="hl" x="120" y="14" width="420" height="30" rx="10"/>
+        <text class="sub" x="330" y="34">app.example.com/login</text>
+        <text class="sub" x="150" y="70" style="text-anchor:start">Username</text>
+        <rect class="box" x="150" y="78" width="360" height="30" rx="6"/>
+        <text class="sub" x="150" y="128" style="text-anchor:start">Password</text>
+        <rect class="box" x="150" y="136" width="360" height="30" rx="6"/>
+        <rect class="hl" x="150" y="182" width="120" height="22" rx="6"/>
+        <text class="label" x="210" y="197" font-size="11">Login</text>
+        <g class="step" style="--i:0"><circle class="dot" cx="150" cy="93" r="5"/></g>
+        <g class="step" style="--i:1"><circle class="dot" cx="150" cy="151" r="5"/></g>
+        <g class="step" style="--i:2"><circle class="dot" cx="210" cy="193" r="5"/></g>
+      </svg>`, 'Three recorded actions: fill the username, fill the password, click Login. Each step is an explicit, visible action.');
+    },
+
+    request() {
+      return fig(`<svg class="vis" viewBox="0 0 660 160" role="img" aria-label="HTTP request and response">
+        <rect class="box" x="30" y="46" width="130" height="60" rx="8"/><text class="label" x="95" y="82">Test client</text>
+        <rect class="box" x="500" y="46" width="130" height="60" rx="8"/><text class="label" x="565" y="82">API server</text>
+        <path class="flow" d="M160 66 H500"/><path class="flow" d="M500 92 H160"/>
+        <text class="sub" x="330" y="56">POST /users  (request)</text>
+        <text class="sub" x="330" y="112">201 Created  (response)</text>
+        <circle class="dot pulse" cx="160" cy="66" r="4"/>
+      </svg>`, 'A request goes out with a method and a body; the response returns a status code and a body.');
+    },
+
+    layers() {
+      const s = ['Tests', 'Facades (business flows)', 'Strategies', 'Page objects', 'Driver factory and configuration'];
+      let h = '<div class="layers-stack">';
+      s.forEach((t, i) => {
+        h += `<div class="lay" style="--i:${i}">${t}</div>`;
+        if (i < s.length - 1) h += '<div class="down">depends on</div>';
+      });
+      return fig(h + '</div>', 'Each layer depends only on the layer below it.');
+    },
+
+    flaky() {
+      return fig(`<div class="bars">
+        <div class="bar-row"><span>Fixed wait of 2 seconds</span><div class="track"><div class="fill sleep"></div></div></div>
+        <div class="bar-row"><span>Wait for the outcome</span><div class="track"><div class="fill cond"></div></div></div>
+      </div>`, 'The fixed wait always takes its full length. The outcome-based wait ends as soon as the page is ready.');
+    },
+
+    pipeline() {
+      const s = ['Checkout', 'Install', 'Lint', 'Smoke tests', 'Regression', 'Report'];
+      let h = '<div class="pipe">';
+      s.forEach((t, i) => {
+        h += `<span class="st" style="--i:${i}">${t}</span>`;
+        if (i < s.length - 1) h += '<span class="arr">→</span>';
+      });
+      return fig(h + '</div>', 'Stages run in order. A failure stops the stages that depend on it.');
+    },
+
+    architecture() {
+      return fig(`<svg class="vis" viewBox="0 0 660 200" role="img" aria-label="Monolith compared with services">
+        <text class="label" x="110" y="24">Monolith</text>
+        <rect class="box" x="20" y="36" width="180" height="140" rx="10"/>
+        <rect class="box" x="40" y="56" width="62" height="34" rx="5"/><rect class="box" x="112" y="56" width="62" height="34" rx="5"/>
+        <rect class="box" x="40" y="104" width="62" height="34" rx="5"/><rect class="box" x="112" y="104" width="62" height="34" rx="5"/>
+        <text class="label" x="500" y="24">Services</text>
+        <rect class="box" x="340" y="36" width="120" height="50" rx="8"/><rect class="box" x="500" y="36" width="120" height="50" rx="8"/>
+        <rect class="box" x="340" y="120" width="120" height="50" rx="8"/><rect class="box" x="500" y="120" width="120" height="50" rx="8"/>
+        <path class="flow" d="M460 61 H500 M400 86 V120 M560 86 V120 M460 145 H500"/>
+      </svg>`, 'A monolith is one deployable unit. Services are separate units that communicate over the network.');
+    },
+
+    cache() {
+      return fig(`<svg class="vis" viewBox="0 0 660 190" role="img" aria-label="Cache hit and cache miss paths">
+        <rect class="box" x="20" y="66" width="120" height="58" rx="8"/><text class="label" x="80" y="100">Application</text>
+        <rect class="box" x="270" y="18" width="130" height="50" rx="8"/><text class="label" x="335" y="48">Cache</text>
+        <rect class="box" x="500" y="120" width="130" height="50" rx="8"/><text class="label" x="565" y="150">Database</text>
+        <path class="flow" d="M140 84 L270 52"/><text class="sub" x="200" y="46">hit: answer returned</text>
+        <path class="flow" d="M140 112 L500 145"/><text class="sub" x="330" y="160">miss: read, then store in cache</text>
+      </svg>`, 'On a hit the cache answers directly. On a miss the database answers, and the result is stored for next time.');
+    },
+
+    scan() {
+      const rows = [['ORD-1001', 'Paid', '42.00'], ['ORD-1002', 'Paid', '18.50'], ['ORD-1003', 'Refunded', '9.99'], ['ORD-1004', 'Paid', '77.10']];
+      return fig(`<div class="scan">
+        <div class="scan-row head"><span>order</span><span>status</span><span>total</span></div>
+        ${rows.map(r => `<div class="scan-row"><span>${r[0]}</span><span>${r[1]}</span><span>${r[2]}</span></div>`).join('')}
+      </div>`, 'A database check compares stored values with what the screen shows. Each row is verified against its expected value.');
+    },
+
+    latency() {
+      const h = [6, 14, 28, 44, 60, 72, 64, 48, 30, 18, 10, 6, 4, 3, 2, 1];
+      return fig(`<svg class="vis" viewBox="0 0 660 230" role="img" aria-label="Latency histogram with a slow tail">
+        ${h.map((v, i) => `<rect x="${30 + i * 38}" y="${200 - v * 2.4}" width="28" height="${v * 2.4}" rx="3" class="dot" opacity="0.75"/>`).join('')}
+        <line x1="30" y1="200" x2="640" y2="200" class="line"/>
+        <text class="sub" x="200" y="222">typical requests (p50)</text>
+        <text class="sub" x="480" y="222">slow tail (p95, p99)</text>
+      </svg>`, 'Most requests are fast; the thin tail on the right is what p95 and p99 measure.');
+    },
+
+    rca() {
+      const w = ['Why did the test fail? The button was not clicked.', 'Why? A banner covered it.', 'Why? The banner loads late.', 'Why? The page object has no readiness wait.', 'Root cause: readiness is not defined in the shared page object.'];
+      return fig('<div class="rca-stack">' + w.map((t, i) =>
+        `<div class="why ${i === 4 ? 'root' : ''}" style="--i:${i}">${t}</div>`).join('') + '</div>',
+        'Five Whys: each answer becomes the next question until a system cause is reached.');
+    },
+
+    matrix() {
+      const cells = [];
+      for (let l = 3; l >= 1; l--) for (let i = 1; i <= 3; i++) cells.push(l * i);
+      const cls = s => s >= 6 ? 'high' : s >= 3 ? 'med' : 'low';
+      return fig('<div class="rmatrix" style="max-width:260px;margin:0 auto">' +
+        cells.map(s => `<div class="rcell ${cls(s)}">${s}</div>`).join('') +
+        '</div>', 'Likelihood rises upward, impact rises to the right. The score in each cell is likelihood multiplied by impact.');
+    }
+  };
+
+  window.VISUALS = V;
+})();
+
+/* ==========================================================================
+   ROBBERCAT's Journey: application
+   ========================================================================== */
+(() => {
+  'use strict';
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const C = window.COURSE;
+  const V = window.VISUALS;
+  const main = $('#main');
+
+  /* ---------- Progress ---------- */
+  const KEY = 'robbercat-guide-v1';
+  let P = { done: [], quiz: {} };
+  try { P = Object.assign(P, JSON.parse(localStorage.getItem(KEY)) || {}); } catch (e) { /* unavailable */ }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (e) { /* ignore */ } };
+  const isDone = id => P.done.includes(id);
+  const toggleDone = id => { P.done = isDone(id) ? P.done.filter(x => x !== id) : [...P.done, id]; save(); };
+  const topicById = id => C.topics.find(t => t.id === id);
+  const chapterOf = t => C.chapters.find(c => c.id === t.chapter);
+  const topicsIn = cid => C.topics.filter(t => t.chapter === cid);
+  const numberOf = t => C.topics.indexOf(t) + 1;
+
+  /* ---------- Sidebar ---------- */
+  function buildSidebar() {
+    let html = '';
+    C.chapters.forEach(ch => {
+      html += `<div class="nav-section"><div class="nav-title">${esc(ch.title)}</div>`;
+      topicsIn(ch.id).forEach(t => {
+        html += `<a class="nav-link ${isDone(t.id) ? 'done' : ''}" data-route="topic/${t.id}" href="#/topic/${t.id}">
+          <span class="tick">✓</span><span>${esc(t.title)}</span></a>`;
+      });
+      html += '</div>';
+    });
+    html += `<div class="nav-section"><div class="nav-title">Reference</div>
+      <a class="nav-link" data-route="lab" href="#/lab/pipeline"><span class="tick"></span><span>Interactive labs</span></a>
+      <a class="nav-link" data-route="glossary" href="#/glossary"><span class="tick"></span><span>Glossary</span></a>
+    </div>`;
+    $('#sidebar').innerHTML = html;
+  }
+
+  function setActive(route) {
+    $$('#sidebar .nav-link').forEach(a => {
+      const r = a.dataset.route;
+      const on = route === r || (route.startsWith('topic/') && r === route) || (route.startsWith('lab') && r === 'lab') || (route === 'glossary' && r === 'glossary');
+      a.classList.toggle('active', on);
+    });
+  }
+
+  /* ---------- Pieces ---------- */
+  function codeBlock(c) {
+    return `<div class="codeblock">
+      <div class="codeblock-head"><span>${esc(c.lang)}</span><button class="copy-btn" type="button" data-copy>Copy</button></div>
+      <pre><code>${esc(c.code)}</code></pre></div>`;
+  }
+  function tableBlock(t) {
+    return `<div class="table-wrap"><table>
+      <thead><tr>${t.head.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead>
+      <tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table></div>`;
+  }
+  function exampleBlock(ex) {
+    if (!ex) return '';
+    return `<section class="example">
+      <div class="example-head"><span>Worked example</span><span>${esc(ex.title)}</span></div>
+      <div class="example-body">
+        ${ex.text ? `<p>${esc(ex.text)}</p>` : ''}
+        ${ex.table ? tableBlock(ex.table) : ''}
+        ${ex.code ? codeBlock(ex.code) : ''}
+        ${ex.code2 ? codeBlock(ex.code2) : ''}
+        ${ex.after ? `<p>${esc(ex.after)}</p>` : ''}
+      </div></section>`;
+  }
+  function quizBlock(t, sel) {
+    const q = t.quiz;
+    const fb = sel === undefined ? '' : (sel === q.a ? 'Correct. ' : 'Not quite. ') + q.e;
+    return `<h3>Quick check</h3>
+      <p class="quiz-q">${esc(q.q)}</p>
+      <div class="quiz-opts">${q.o.map((o, i) => {
+        let cls = '';
+        if (sel !== undefined) { if (i === q.a) cls = 'right'; else if (i === sel) cls = 'wrong'; }
+        return `<button class="opt ${cls}" type="button" data-quiz="${t.id}" data-i="${i}">${esc(o)}</button>`;
+      }).join('')}</div>
+      <p class="quiz-fb">${esc(fb)}</p>`;
+  }
+
+  /* ---------- Pages ---------- */
+  function renderHome() {
+    const total = C.topics.length;
+    const done = P.done.length;
+    const pct = Math.round(done / total * 100);
+    const rows = C.chapters.map(ch => {
+      const ts = topicsIn(ch.id);
+      const mins = ts.reduce((a, t) => a + parseInt(t.time, 10), 0);
+      return `<tr><td><a href="#/topic/${ts[0].id}">${esc(ch.title)}</a></td><td>${esc(ch.blurb)}</td><td>${ts.length}</td><td>${mins} min</td></tr>`;
+    }).join('');
+    return `
+      <div class="crumb">Learning guide for software testers</div>
+      <h1>ROBBERCAT's Journey</h1>
+      <p class="lead">A structured guide from testing fundamentals to CI/CD, system design and quality analysis. Each lesson explains a concept, works through a realistic example, and ends with a practice task.</p>
+
+      <h2>How the guide is organized</h2>
+      <p>The guide has seven chapters that build on one another. Read them in order the first time. Each lesson is self-contained enough to return to later as a reference, and the glossary collects the terms in one place.</p>
+      <div class="table-wrap"><table class="overview-table">
+        <thead><tr><th>Chapter</th><th>What you learn</th><th>Lessons</th><th>Estimated time</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+
+      <div class="progress-box">
+        <div><strong>Your progress</strong><div class="muted small">${done} of ${total} lessons marked complete on this device</div></div>
+        <div class="progress-track"><i style="width:${pct}%"></i></div>
+        <span class="small muted">${pct}%</span>
+      </div>
+
+      <div class="complete-row">
+        <a class="btn primary" href="#/topic/${C.topics[0].id}">Start with lesson 1</a>
+        <a class="btn" href="#/lab/pipeline">Open the labs</a>
+        <a class="btn" href="#/glossary">Browse the glossary</a>
+      </div>
+
+      <h2>Conventions used in this guide</h2>
+      <p>Code samples use TypeScript with Playwright or Python with pytest unless a lesson says otherwise. Tables in worked examples show expected results, so you can check your own work against them. Callouts flag the points where readers most often make mistakes.</p>
+      <div class="callout"><strong>Tip</strong><p>Read the worked example before the code. It states the goal, and the explanation after the code tells you what to notice.</p></div>
+    `;
+  }
+
+  function renderTopic(id) {
+    const t = topicById(id) || C.topics[0];
+    const ch = chapterOf(t);
+    const idx = C.topics.indexOf(t);
+    const prev = C.topics[idx - 1];
+    const next = C.topics[idx + 1];
+    const done = isDone(t.id);
+    const visual = t.visual && V[t.visual] ? V[t.visual]() : '';
+    return `
+      <div class="crumb"><a href="#/">Guide</a><span class="sep">/</span><span>${esc(ch.title)}</span></div>
+      <h1>${esc(t.title)}</h1>
+      <p class="lead">${esc(t.summary)}</p>
+      <div class="meta"><span>Lesson ${numberOf(t)} of ${C.topics.length}</span><span>${esc(t.time)}</span><span>${esc(ch.title)}</span></div>
+
+      ${visual}
+
+      ${t.sections.map(s => `<section><h2>${esc(s.h)}</h2>${s.p.map(p => `<p>${esc(p)}</p>`).join('')}</section>`).join('')}
+
+      ${exampleBlock(t.example)}
+
+      <section class="keypoints"><h2>Key points</h2>
+        <ul>${t.keypoints.map(k => `<li>${esc(k)}</li>`).join('')}</ul>
+      </section>
+
+      ${t.lab ? `<div class="callout"><strong>Interactive lab</strong><p>This lesson has a lab that lets you change the inputs and see the result. <a href="#/lab/${t.lab}">Open the lab</a>.</p></div>` : ''}
+
+      <div class="task"><h3>Practice task</h3><p>${esc(t.task)}</p></div>
+
+      <div class="quiz" id="quiz">${quizBlock(t, P.quiz[t.id] === undefined ? undefined : (P.quiz[t.id] ? t.quiz.a : -1))}</div>
+
+      <div class="complete-row">
+        <button class="btn ${done ? 'done' : 'primary'}" type="button" data-done="${t.id}">${done ? '✓ Marked complete' : 'Mark as complete'}</button>
+      </div>
+
+      <nav class="pager">
+        ${prev ? `<a href="#/topic/${prev.id}">← ${esc(prev.title)}</a>` : '<span></span>'}
+        ${next ? `<a href="#/topic/${next.id}">${esc(next.title)} →</a>` : '<span></span>'}
+      </nav>`;
+  }
+
+  function renderLabsShell(current) {
+    return `
+      <div class="crumb"><a href="#/">Guide</a><span class="sep">/</span><span>Interactive labs</span></div>
+      <h1>Interactive labs</h1>
+      <p class="lead">Change the inputs and observe the result. Each lab corresponds to a lesson, and the notes explain what the result means.</p>
+      <nav class="seg">${LABS.map(l => `<a class="${l.id === current ? 'on' : ''}" href="#/lab/${l.id}">${l.name}</a>`).join('')}</nav>
+      <div class="lab-panel" id="lab-body"></div>`;
+  }
+
+  function renderGlossary() {
+    return `
+      <div class="crumb"><a href="#/">Guide</a><span class="sep">/</span><span>Glossary</span></div>
+      <h1>Glossary</h1>
+      <p class="lead">Plain-language definitions of the terms used across the guide.</p>
+      <input id="gl-search" class="search" type="search" placeholder="Filter terms" aria-label="Filter glossary terms">
+      <dl class="gloss" id="gl-list">
+        ${C.glossary.map(g => `<div class="gl-item" data-term="${esc(g.term.toLowerCase())}"><dt>${esc(g.term)}</dt><dd>${esc(g.def)}</dd></div>`).join('')}
+      </dl>`;
+  }
+
+  /* ---------- Labs ---------- */
+  const LABS = [
+    { id: 'pipeline', name: 'CI pipeline' },
+    { id: 'flaky', name: 'Waits and flakiness' },
+    { id: 'latency', name: 'Latency percentiles' },
+    { id: 'risk', name: 'Risk matrix' }
+  ];
+
+  function labPipeline(body) {
+    const stages = ['Checkout', 'Install', 'Lint', 'Smoke', 'Regression', 'Report'];
+    body.innerHTML = `
+      <h2>CI pipeline</h2>
+      <p class="muted">Choose a stage to fail and run the pipeline. Later stages are skipped after a failure, which is how a fail-fast pipeline behaves. The report stage always runs, so the evidence is kept.</p>
+      <div class="controls">
+        <label>Fail at <select id="pl-fail">
+          <option value="">Nothing (passing run)</option>
+          ${stages.map(s => `<option value="${s}">${s}</option>`).join('')}
+        </select></label>
+        <button class="btn primary" id="pl-run" type="button">Run pipeline</button>
+      </div>
+      <div class="stage-row">${stages.map((s, i) => `<div class="stage" data-s="${i}"><b>${s}</b><small>waiting</small></div>`).join('')}</div>
+      <ul class="log" id="pl-log" aria-live="polite"></ul>`;
+    const logEl = $('#pl-log', body);
+    const log = (text, cls) => {
+      const li = document.createElement('li');
+      li.className = cls || '';
+      li.textContent = text;
+      logEl.appendChild(li);
+      logEl.scrollTop = logEl.scrollHeight;
+    };
+    $('#pl-run', body).addEventListener('click', async () => {
+      const fail = $('#pl-fail', body).value;
+      const btn = $('#pl-run', body);
+      btn.disabled = true;
+      logEl.innerHTML = '';
+      $$('.stage', body).forEach(s => { s.className = 'stage'; s.querySelector('small').textContent = 'waiting'; });
+      let failed = false;
+      for (let i = 0; i < stages.length; i++) {
+        const name = stages[i];
+        const el = $(`.stage[data-s="${i}"]`, body);
+        const state = el.querySelector('small');
+        if (failed && name !== 'Report') {
+          el.classList.add('skipped');
+          state.textContent = 'skipped';
+          log(`${name}: skipped because an earlier stage failed`);
+          continue;
+        }
+        el.classList.add('running');
+        state.textContent = 'running';
+        await wait(600);
+        el.classList.remove('running');
+        if (name === fail) {
+          el.classList.add('fail');
+          state.textContent = 'failed';
+          log(`${name}: failed with exit code 1`, 'bad');
+          failed = true;
+        } else {
+          el.classList.add('pass');
+          state.textContent = 'passed';
+          log(`${name}: passed`, 'ok');
+        }
+      }
+      log(failed ? 'Pipeline failed. Fix the failing stage and run again.' : 'Pipeline passed. The build is ready for staging.', failed ? 'bad' : 'ok');
+      btn.disabled = false;
+    });
+  }
+
+  function labFlaky(body) {
+    body.innerHTML = `
+      <h2>Fixed waits versus waiting for the outcome</h2>
+      <p class="muted">A page takes a varying time to become ready. A slower environment stretches that time. A fixed wait either wastes time or fails. A wait for the outcome adapts to the page as it actually is.</p>
+      <div class="controls">
+        <label class="grow">Environment slowdown <strong id="fl-val">1.0</strong>×
+          <input id="fl-slow" type="range" min="1" max="4" step="0.1" value="1"></label>
+        <button class="btn primary" id="fl-run" type="button">Simulate 200 tests</button>
+      </div>
+      <div class="compare">
+        <div class="cmp"><h3>Fixed wait of 2 seconds</h3><div class="big" id="fl-sleep">–</div><p>Always takes 2 seconds, even when the page is ready sooner.</p></div>
+        <div class="cmp"><h3>Wait for the outcome, up to 5 seconds</h3><div class="big" id="fl-cond">–</div><p id="fl-cond-note">Ends as soon as the page is ready.</p></div>
+      </div>
+      <p class="muted small" style="margin-top:14px">Each page becomes ready after a random 0.6 to 1.4 seconds, multiplied by the slowdown.</p>`;
+    const slow = $('#fl-slow', body);
+    const run = () => {
+      const s = +slow.value;
+      $('#fl-val', body).textContent = s.toFixed(1);
+      let sleepPass = 0, condPass = 0, condTime = 0;
+      for (let i = 0; i < 200; i++) {
+        const ready = (600 + Math.random() * 800) * s;
+        if (ready <= 2000) sleepPass++;
+        if (ready <= 5000) { condPass++; condTime += ready; }
+      }
+      $('#fl-sleep', body).textContent = Math.round(sleepPass / 2) + '% pass';
+      $('#fl-cond', body).textContent = Math.round(condPass / 2) + '% pass';
+      $('#fl-cond-note', body).textContent = 'Average ' + (condTime / Math.max(condPass, 1) / 1000).toFixed(2) + ' s per test. Ends as soon as the page is ready.';
+    };
+    slow.addEventListener('input', run);
+    $('#fl-run', body).addEventListener('click', run);
+    run();
+  }
+
+  function labLatency(body) {
+    body.innerHTML = `
+      <h2>Why averages mislead</h2>
+      <p class="muted">Simulate 500 requests. Most are fast, but some are slow. Compare the average with the percentiles, which describe what users actually experience.</p>
+      <div class="controls">
+        <label class="grow">Spread of slow requests <strong id="lt-val">0.40</strong>
+          <input id="lt-tail" type="range" min="0.1" max="1.2" step="0.05" value="0.4"></label>
+        <button class="btn primary" id="lt-run" type="button">Resample</button>
+      </div>
+      <div class="hist" id="lt-hist"></div>
+      <div class="stats-row" id="lt-stats"></div>
+      <p class="muted small" style="margin-top:14px">Objective used here: p95 should stay under 500 ms.</p>`;
+    const tail = $('#lt-tail', body);
+    const draw = () => {
+      const sigma = +tail.value;
+      $('#lt-val', body).textContent = sigma.toFixed(2);
+      const xs = [];
+      for (let i = 0; i < 500; i++) {
+        const u = Math.random() || 1e-9;
+        const v = Math.random();
+        xs.push(Math.exp(Math.log(180) + sigma * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v)));
+      }
+      xs.sort((a, b) => a - b);
+      const pick = p => xs[Math.min(xs.length - 1, Math.floor(p * xs.length))];
+      const avg = xs.reduce((a, b) => a + b, 0) / xs.length;
+      const p50 = pick(0.5), p95 = pick(0.95), p99 = pick(0.99);
+      const max = xs[xs.length - 1], B = 24, counts = Array(B).fill(0);
+      xs.forEach(x => counts[Math.min(B - 1, Math.floor(x / max * B))]++);
+      const peak = Math.max(...counts);
+      $('#lt-hist', body).innerHTML = counts.map((c, i) =>
+        `<div class="hbar" style="height:${Math.max(2, c / peak * 100)}%" title="${Math.round(i * max / B)} to ${Math.round((i + 1) * max / B)} ms: ${c} requests"></div>`).join('');
+      $('#lt-stats', body).innerHTML = [['Average', avg], ['p50', p50], ['p95', p95], ['p99', p99]].map(([k, v]) =>
+        `<div class="metric"><b>${Math.round(v)} ms</b><span>${k}</span></div>`).join('') +
+        `<div class="metric ${p95 <= 500 ? 'ok' : 'bad'}"><b>${p95 <= 500 ? 'Met' : 'Missed'}</b><span>p95 objective</span></div>`;
+    };
+    tail.addEventListener('input', draw);
+    $('#lt-run', body).addEventListener('click', draw);
+    draw();
+  }
+
+  function labRisk(body) {
+    body.innerHTML = `
+      <h2>Risk matrix</h2>
+      <p class="muted">Add a risk and rate its likelihood and impact from 1 (low) to 3 (high). The score is likelihood multiplied by impact. Scores of 6 to 9 are high priority.</p>
+      <div class="controls">
+        <input id="rk-name" class="grow" type="text" placeholder="Describe the risk" aria-label="Risk description">
+        <select id="rk-l" aria-label="Likelihood">
+          <option value="1">Likelihood: low</option><option value="2">Likelihood: medium</option><option value="3">Likelihood: high</option>
+        </select>
+        <select id="rk-i" aria-label="Impact">
+          <option value="1">Impact: low</option><option value="2">Impact: medium</option><option value="3">Impact: high</option>
+        </select>
+        <button class="btn primary" id="rk-add" type="button">Add risk</button>
+      </div>
+      <div class="risk-wrap">
+        <div><div class="rmatrix" id="rk-grid"></div></div>
+        <ul class="rlist" id="rk-list"></ul>
+      </div>`;
+    const risks = [];
+    const level = s => s >= 6 ? 'high' : s >= 3 ? 'med' : 'low';
+    const label = s => s >= 6 ? 'High' : s >= 3 ? 'Medium' : 'Low';
+    const draw = () => {
+      const grid = $('#rk-grid', body);
+      grid.innerHTML = '';
+      for (let l = 3; l >= 1; l--) for (let i = 1; i <= 3; i++) {
+        const count = risks.filter(r => r.l === l && r.i === i).length;
+        const cell = document.createElement('div');
+        cell.className = 'rcell ' + level(l * i);
+        cell.textContent = count || '';
+        cell.title = 'Likelihood ' + l + ', impact ' + i + ', score ' + (l * i);
+        grid.appendChild(cell);
+      }
+      $('#rk-list', body).innerHTML = risks.length
+        ? risks.map(r => { const s = r.l * r.i; return `<li class="${level(s)}">${esc(r.name)}<span>${r.l} × ${r.i} = ${s}, ${label(s)} priority</span></li>`; }).join('')
+        : '<li class="muted">No risks yet. Add one to place it on the matrix.</li>';
+    };
+    $('#rk-add', body).addEventListener('click', () => {
+      const name = $('#rk-name', body).value.trim() || 'Unnamed risk';
+      risks.push({ name, l: +$('#rk-l', body).value, i: +$('#rk-i', body).value });
+      $('#rk-name', body).value = '';
+      draw();
+    });
+    draw();
+  }
+
+  const LAB_FN = { pipeline: labPipeline, flaky: labFlaky, latency: labLatency, risk: labRisk };
+
+  /* ---------- Router ---------- */
+  function route() {
+    const parts = (location.hash || '#/').replace(/^#\/?/, '').split('/');
+    const name = parts[0] || 'home';
+    const arg = parts[1];
+    let html, routeKey = name;
+
+    if (name === 'topic') html = renderTopic(arg);
+    else if (name === 'lab') { html = renderLabsShell(arg || 'pipeline'); routeKey = 'lab'; }
+    else if (name === 'glossary') html = renderGlossary();
+    else { html = renderHome(); routeKey = 'home'; }
+
+    main.innerHTML = `<div class="page page-enter">${html}</div>`;
+    if (name === 'lab') (LAB_FN[arg] || LAB_FN.pipeline)($('#lab-body'));
+    if (name === 'glossary') bindGlossary();
+    setActive(name === 'topic' ? 'topic/' + (arg || C.topics[0].id) : routeKey === 'home' ? 'home' : name);
+    window.scrollTo(0, 0);
+    closeSidebar();
+
+    const titles = {
+      topic: (topicById(arg) || C.topics[0]).title,
+      lab: 'Interactive labs',
+      glossary: 'Glossary'
+    };
+    document.title = (titles[name] ? titles[name] + ' · ' : '') + 'ROBBERCAT\u2019s Journey';
+    buildSidebar();
+    setActive(name === 'topic' ? 'topic/' + (arg || C.topics[0].id) : name === 'lab' ? 'lab' : name);
+  }
+
+  function bindGlossary() {
+    const input = $('#gl-search');
+    input.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      $$('.gl-item').forEach(item => { item.style.display = item.dataset.term.includes(q) ? '' : 'none'; });
+    });
+  }
+
+  /* ---------- Mobile sidebar ---------- */
+  const sidebar = $('#sidebar');
+  const scrim = $('#scrim');
+  function openSidebar() { sidebar.classList.add('open'); scrim.classList.add('open'); }
+  function closeSidebar() { sidebar.classList.remove('open'); scrim.classList.remove('open'); }
+  $('#menuBtn').addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
+  scrim.addEventListener('click', closeSidebar);
+
+  /* ---------- Global clicks ---------- */
+  document.addEventListener('click', e => {
+    const done = e.target.closest('[data-done]');
+    if (done) {
+      const id = done.dataset.done;
+      toggleDone(id);
+      const on = isDone(id);
+      done.textContent = on ? '✓ Marked complete' : 'Mark as complete';
+      done.classList.toggle('done', on);
+      done.classList.toggle('primary', !on);
+      buildSidebar();
+      setActive('topic/' + id);
+      return;
+    }
+    const quiz = e.target.closest('[data-quiz]');
+    if (quiz) {
+      const t = topicById(quiz.dataset.quiz);
+      const i = +quiz.dataset.i;
+      P.quiz[t.id] = (i === t.quiz.a);
+      save();
+      $('#quiz').innerHTML = quizBlock(t, i);
+      return;
+    }
+    const copy = e.target.closest('[data-copy]');
+    if (copy && navigator.clipboard) {
+      const text = copy.closest('.codeblock').querySelector('code').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        copy.textContent = 'Copied';
+        setTimeout(() => { copy.textContent = 'Copy'; }, 1400);
+      }).catch(() => {});
+    }
+  });
+
+  /* ---------- Search dialog ---------- */
+  const palette = $('#palette');
+  const pin = $('#paletteInput');
+  const plist = $('#paletteList');
+  const ITEMS = [
+    { label: 'Home', href: '#/', kind: 'Page', text: 'home guide start' },
+    { label: 'Interactive labs', href: '#/lab/pipeline', kind: 'Page', text: 'labs experiments' },
+    { label: 'Glossary', href: '#/glossary', kind: 'Page', text: 'glossary terms definitions' }
+  ].concat(C.topics.map(t => ({ label: t.title, href: '#/topic/' + t.id, kind: chapterOf(t).title, text: t.title + ' ' + t.summary })));
+  let sel = 0;
+  const results = () => { const q = pin.value.trim().toLowerCase(); return ITEMS.filter(i => i.text.toLowerCase().includes(q)).slice(0, 10); };
+  function drawResults() {
+    const res = results();
+    plist.innerHTML = res.length
+      ? res.map((r, i) => `<li data-href="${r.href}" class="${i === sel ? 'act' : ''}"><span>${esc(r.label)}</span><small>${esc(r.kind)}</small></li>`).join('')
+      : '<li class="muted">No matches</li>';
+  }
+  function markSel() { $$('#paletteList li[data-href]').forEach((li, i) => li.classList.toggle('act', i === sel)); }
+  function openSearch() { palette.classList.remove('hidden'); pin.value = ''; sel = 0; drawResults(); pin.focus(); }
+  function closeSearch() { palette.classList.add('hidden'); }
+  function go(href) { location.hash = href; closeSearch(); }
+  pin.addEventListener('input', () => { sel = 0; drawResults(); });
+  pin.addEventListener('keydown', e => {
+    const n = $$('#paletteList li[data-href]').length;
+    if (!n) return;
+    if (e.key === 'ArrowDown') { sel = (sel + 1) % n; markSel(); e.preventDefault(); }
+    else if (e.key === 'ArrowUp') { sel = (sel - 1 + n) % n; markSel(); e.preventDefault(); }
+    else if (e.key === 'Enter') { const li = $$('#paletteList li[data-href]')[sel]; if (li) go(li.dataset.href); }
+    else if (e.key === 'Escape') closeSearch();
+  });
+  plist.addEventListener('click', e => { const li = e.target.closest('li[data-href]'); if (li) go(li.dataset.href); });
+  palette.addEventListener('click', e => { if (e.target === palette) closeSearch(); });
+  document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      palette.classList.contains('hidden') ? openSearch() : closeSearch();
+    } else if (e.key === '/' && palette.classList.contains('hidden') && !/input|textarea|select/i.test(document.activeElement.tagName)) {
+      e.preventDefault();
+      openSearch();
+    }
+  });
+  $('#searchBtn').addEventListener('click', openSearch);
+
+  /* ---------- Theme ---------- */
+  const root = document.documentElement;
+  let saved = null;
+  try { saved = localStorage.getItem('rc-guide-theme'); } catch (e) { /* ignore */ }
+  root.dataset.theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  $('#themeBtn').addEventListener('click', () => {
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('rc-guide-theme', root.dataset.theme); } catch (e) { /* ignore */ }
+  });
+
+  /* ---------- Start ---------- */
+  buildSidebar();
+  window.addEventListener('hashchange', route);
+  route();
+})();
+
+</script>
+</body>
+</html>
